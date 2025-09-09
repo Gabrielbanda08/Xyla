@@ -1342,11 +1342,44 @@
       const s = Math.floor(sec % 60);
       return `${m}:${s < 10 ? '0' : ''}${s}`;
     }
-    progressBar.onclick = (e) => {
-      const rect = progressBar.getBoundingClientRect();
-      const percent = (e.clientX - rect.left) / rect.width;
-      audio.currentTime = percent * audio.duration;
-    };
+    let isDragging = false;
+
+progressBar.addEventListener('mousedown', function(e) {
+  isDragging = true;
+  seekAudio(e);
+});
+
+document.addEventListener('mousemove', function(e) {
+  if (isDragging) {
+    seekAudio(e);
+  }
+});
+
+document.addEventListener('mouseup', function() {
+  isDragging = false;
+});
+
+// Touch support for mobile devices
+progressBar.addEventListener('touchstart', function(e) {
+  isDragging = true;
+  seekAudio(e.touches[0]);
+});
+
+document.addEventListener('touchmove', function(e) {
+  if (isDragging) {
+    seekAudio(e.touches[0]);
+  }
+});
+
+document.addEventListener('touchend', function() {
+  isDragging = false;
+});
+
+function seekAudio(e) {
+  const rect = progressBar.getBoundingClientRect();
+  const percent = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+  audio.currentTime = percent * audio.duration;
+}
     volumeRange.oninput = () => {
       audio.volume = volumeRange.value;
     };
