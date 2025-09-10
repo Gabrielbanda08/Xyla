@@ -525,6 +525,7 @@
         <li><a class="sidebar-link" data-section="genres"><span>🎶</span> Genres</a></li>
         <li><a class="sidebar-link" data-section="library"><span>🎧</span> Library</a></li>
         <li><a class="sidebar-link" data-section="settings"><span>⚙️</span> Settings</a></li>
+        <li><a class="sidebar-link" data-section="contacts"><span>📞</span> Contacts</a></li>
       </ul>
     </div>
     <div class="sidebar-footer">
@@ -610,6 +611,28 @@
       </div>
     </div>
   </div>
+  <!-- ...existing code... -->
+  <!-- Contacts Panel -->
+  <div id="contacts-panel"
+    style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:#141e3088;z-index:31;align-items:center;justify-content:center;">
+    <div class="settings-box" style="max-width:370px;">
+      <button class="settings-close" id="close-contacts" title="Close">&times;</button>
+      <div class="settings-title">Contact Us</div>
+      <div style="display:flex;flex-direction:column;gap:1em;">
+        <a class="settings-btn" href="https://wa.me/077668182" target="_blank">WhatsApp</a>
+        <a class="settings-btn" href="https://facebook.com/gabrielbanda08" target="_blank">Facebook</a>
+        <a class="settings-btn" href="https://twitter.com/yourtwitterhandle" target="_blank">Twitter</a>
+        <a class="settings-btn" href="https://instagram.com/gabrielbandax" target="_blank">Instagram</a>
+        <a class="settings-btn" href="https://threads.net/@gabrielbandax target="_blank">Threads</a>
+        <a class="settings-btn" href="https://discord.gg/yourdiscordinvite" target="_blank">Discord</a>
+        <a class="settings-btn" href="mailto:gabrieljoshuabanda81@gmail.com">Email</a>
+      </div>
+      <div style="margin-top:1.5em;font-size:0.95em;opacity:0.7;text-align:center;">
+        Promote your music on Wave🌊!
+      </div>
+    </div>
+  </div>
+  <!-- ...existing code... -->
   <script>
     // ---Songs (with cover art and audio links) ---
     const songs = [
@@ -1425,6 +1448,15 @@ function seekAudio(e) {
     settingsPanel.addEventListener('click', (e) => {
       if (e.target === settingsPanel) settingsPanel.style.display = 'none';
     });
+    // --- Contacts Panel Logic ---
+      const contactsPanel = document.getElementById('contacts-panel');
+      document.querySelector('.sidebar-link[data-section="contacts"]').onclick = function (e) {
+        e.preventDefault();
+        contactsPanel.style.display = 'flex';
+      };
+      document.getElementById('close-contacts').onclick = () => {
+        contactsPanel.style.display = 'none';
+      };
   </script>
 </body>
 </html>
