@@ -514,6 +514,10 @@
   </style>
 </head>
 <body>
+<div id="loading-screen"
+  style="position:fixed;top:0;left:0;width:100vw;height:100vh;background:#141e30;z-index:100;display:flex;align-items:center;justify-content:center;flex-direction:column;">
+  <img src="Wave🌊 Favicon.png" alt="Wave Logo" style="width:64px;height:64px;margin-bottom:1em;">
+</div>
   <nav id="sidebar">
     <div>
       <div class="sidebar-header">Wave🌊</div>
@@ -1461,14 +1465,17 @@
 
     // --- Initial Load ---
     window.onload = () => {
-      loadSection('home');
+      setTimeout(() => {
+        document.getElementById('loading-screen').style.display = 'none';
+        loadSection('home');
+      }, 5000); // 5 seconds delay for demo
     };
 
     // --- Audio Player Logic ---
     let currentSongIdx = null;
     let isPlaying = false;
     let shuffle = false;
-    let repeat = false;
+    let repeatMode = 0; // 0 = off, 1 = repeat all, 2 = repeat one
     let audio = document.getElementById('audio');
     let playerCover = document.getElementById('player-cover');
     let playerTitle = document.getElementById('player-title');
@@ -1531,21 +1538,32 @@
       }
     };
     btnRepeat.onclick = () => {
-      repeat = !repeat;
-      btnRepeat.style.color = repeat ? '#fff' : '#64b5f6';
-      btnRepeat.style.boxShadow = repeat ? '0 0 12px 2px #1976d2cc' : '';
-    };
-    btnShuffle.onclick = () => {
-      shuffle = !shuffle;
-      btnShuffle.style.color = shuffle ? '#fff' : '#64b5f6';
-      btnShuffle.style.boxShadow = shuffle ? '0 0 12px 2px #1976d2cc' : '';
-    };
-    audio.onended = () => {
-      if (repeat) {
-        playAudio();
-      } else {
-        btnNext.onclick();
+      repeatMode = (repeatMode + 1) % 3;
+      if (repeatMode === 0) {
+        btnRepeat.style.color = '#64b5f6';
+        btnRepeat.style.boxShadow = '';
+        btnRepeat.title = 'Repeat Off';
+        btnRepeat.innerHTML = '&#128257;'; // repeat icon
+      } else if (repeatMode === 1) {
+        btnRepeat.style.color = '#fff';
+        btnRepeat.style.boxShadow = '0 0 12px 2px #1976d2cc';
+        btnRepeat.title = 'Repeat All';
+        btnRepeat.innerHTML = '&#128257;'; // repeat icon
+      } else if (repeatMode === 2) {
+        btnRepeat.style.color = '#fff';
+        btnRepeat.style.boxShadow = '0 0 12px 2px #1976d2cc';
+        btnRepeat.title = 'Repeat One';
+        btnRepeat.innerHTML = '&#128258;'; // repeat one icon
       }
+    };
+
+    audio.onended = () => {
+      if (repeatMode === 2) {
+        playAudio(); // repeat one
+      } else if (repeatMode === 1) {
+        btnNext.onclick(); // repeat all
+      }
+      // repeatMode === 0: do nothing
     };
     audio.ontimeupdate = () => {
       let percent = (audio.currentTime / audio.duration) * 100;
