@@ -1501,16 +1501,18 @@
         `;
         // Play button
         card.querySelector('.music-card-btn[title="Play"]').onclick = () => {
-          loadSong(idx);
+          loadSong(idx, songsToRender); // Pass the filtered array
         };
         container.appendChild(card);
       });
     }
 
     // --- Search Filter ---
+    let currentSongsArray = songs;
     const searchInput = document.getElementById('search-input');
     searchInput.addEventListener('input', function() {
       const query = searchInput.value.trim().toLowerCase();
+      let filteredSongs;
       if (currentSection === 'genres') {
         // If genre filtered, get current genre
         let cards = songs;
@@ -1520,18 +1522,20 @@
             cards = songs.filter(s => s.genre === btn.textContent);
           }
         });
-        renderMusicCards(cards.filter(song =>
+        filteredSongs = (cards.filter(song =>
           song.title.toLowerCase().includes(query) ||
           song.artist.toLowerCase().includes(query) ||
           song.genre.toLowerCase().includes(query)
         ));
       } else {
-        renderMusicCards(songs.filter(song =>
+        filteredSongs = (songs.filter(song =>
           song.title.toLowerCase().includes(query) ||
           song.artist.toLowerCase().includes(query) ||
           song.genre.toLowerCase().includes(query)
         ));
       }
+      currentSongsArray = filteredSongs;
+      renderMusicCards(filteredSongs);
     });
 
     // --- Genre Filter function ---
@@ -1541,7 +1545,9 @@
         btn.classList.remove('active');
         if (btn.textContent === genre) btn.classList.add('active');
       });
-      renderMusicCards(songs.filter(s => s.genre === genre));
+      const filteredSongs = songs.filter(s => s.genre === genre);
+      currentSongsArray = filteredSongs;
+      renderMusicCards(filteredSongs);
     };
 
     // --- Initial Load ---
@@ -1572,8 +1578,8 @@
     let playerDuration = document.getElementById('player-duration');
     let volumeRange = document.getElementById('volume-range');
 
-    function loadSong(idx) {
-      const song = songs[idx];
+    function loadSong(idx, songArray = songs) {
+      const song = songArray [idx];
       currentSongIdx = idx;
       audio.src = song.audio;
       playerCover.src = song.cover;
@@ -1606,17 +1612,25 @@
     };
     btnNext.onclick = () => {
       if (shuffle) {
-        loadSong(Math.floor(Math.random() * songs.length));
+        loadSong(Math.floor(Math.random() * currentSongsArray.length), currentSongsArray);
       } else {
-        loadSong((currentSongIdx + 1) % songs.length);
+        loadSong((currentSongIdx + 1) % currentSongsArray.length, currentSongsArray);
       }
     };
     btnPrev.onclick = () => {
       if (shuffle) {
-        loadSong(Math.floor(Math.random() * songs.length));
+        loadSong(Math.floor(Math.random() * currentSongsArray.length), currentSongsArray);
       } else {
-        loadSong((currentSongIdx - 1 + songs.length) % songs.length);
+        loadSong((currentSongIdx - 1 + currentSongsArray.length) % currentSongsArray.length);
       }
+    };
+    audio.onended = () => {
+      if (repeatMode === 2) {
+        playAudio(); // repeat one
+      } else if (repeatMode === 1) {
+        btnNext.onclick(); // repeat all
+      }
+      // repeatMode === 0: do nothing
     };
     btnRepeat.onclick = () => {
       repeatMode = (repeatMode + 1) % 3;
