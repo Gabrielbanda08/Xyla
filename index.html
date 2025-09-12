@@ -1495,17 +1495,19 @@
             <div class="music-card-album">${song.album}</div>
           </div>
           <div class="music-card-actions">
-            <button class="music-card-btn" title="Play" data-idx="${idx}">&#9654;</button>
             <a class="music-card-btn" title="Download" href="${song.audio}" download><span>&#128190;</span> Download</a>
           </div>
         `;
-        // Play button
-        card.querySelector('.music-card-btn[title="Play"]').onclick = () => {
-          loadSong(idx, songsToRender); // Pass the filtered array
+        // Make the whole card clickable to play
+        card.onclick = (e) => {
+        // Prevent download button from triggering play
+          if (e.target.closest('.music-card-btn')) return;
+          loadSong(idx, songsToRender);
         };
         container.appendChild(card);
       });
     }
+    
 
     // --- Search Filter ---
     let currentSongsArray = songs;
