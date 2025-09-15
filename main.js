@@ -1,6 +1,78 @@
     // ---Songs (with cover art and audio links) ---
     const songs = [  
-    {
+      {
+        title: "Mad At You",
+        artist: "King Von ft Dreezy",
+        album: "Welcome to O'Block",
+        genre: "	Hip hop . drill . gangsta rap",
+        cover: "https://upload.wikimedia.org/wikipedia/en/thumb/5/5e/King_Von_-_Welcome_to_O%27Block.png/250px-King_Von_-_Welcome_to_O%27Block.png",
+        audio: "Songs/King Von - Mad At You (Feat Dreezy).mp3"
+      },
+      {
+        title: "The Code",
+        artist: "King Von ft Polo G",
+        album: "Welcome to O'Block",
+        genre: "Hip hop . drill . gangsta rap",
+        cover: "https://upload.wikimedia.org/wikipedia/en/thumb/5/5e/King_Von_-_Welcome_to_O%27Block.png/250px-King_Von_-_Welcome_to_O%27Block.png",
+        audio: "Songs/King Von - The Code (Feat Polo G).mp3"
+      },
+      {
+        title: "Mine Too",
+        artist: "King Von",
+        album: "Welcome to O'Block",
+        genre: "Hip hop . drill . gangsta rap",
+        cover: "https://upload.wikimedia.org/wikipedia/en/thumb/5/5e/King_Von_-_Welcome_to_O%27Block.png/250px-King_Von_-_Welcome_to_O%27Block.png",
+        audio: "Songs/King Von - Mine Too.mp3",
+      },
+      {
+        title: "I Am What I Am",
+        artist: "King Von ft Fivio Foreign",
+        album: "Welcome to O'Block",
+        genre: "Hip hop . drill . gangsta rap",
+        cover: "https://upload.wikimedia.org/wikipedia/en/thumb/5/5e/King_Von_-_Welcome_to_O%27Block.png/250px-King_Von_-_Welcome_to_O%27Block.png",
+        audio: "Songs/King Von - I Am What I Am (Feat Fivio Foreign).mp3",
+      },
+      {
+        title: "Gleesh Place",
+        artist: "King Von",
+        album: "Welcome to O'Block",
+        genre: "Hip hop . drill . gangsta rap",
+        cover: "https://upload.wikimedia.org/wikipedia/en/thumb/5/5e/King_Von_-_Welcome_to_O%27Block.png/250px-King_Von_-_Welcome_to_O%27Block.png",
+        audio: "Songs/King Von - Gleesh Place.mp3",
+      },
+      {
+        title: "Can't Relate",
+        artist: "King Von",
+        album: "Welcome to O'Block",
+        genre: "Hip hop . drill . gangsta rap",
+        cover: "https://upload.wikimedia.org/wikipedia/en/thumb/5/5e/King_Von_-_Welcome_to_O%27Block.png/250px-King_Von_-_Welcome_to_O%27Block.png",
+        audio: "Songs/King Von - Can't Relate.mp3",
+      },
+      {
+        title: "Back Again",
+        artist: "King Von ft Lil Durk & Prince Dre",
+        album: "Welcome To O'Block",
+        genre: "Hip hop . drill . gangsta rap",
+        cover: "https://upload.wikimedia.org/wikipedia/en/thumb/5/5e/King_Von_-_Welcome_to_O%27Block.png/250px-King_Von_-_Welcome_to_O%27Block.png",
+        audio: "Songs/King Von - Back Again (Feat Lil Durk & Prince Dre).mp3",
+      },
+      {
+        title: "All These Niggas",
+        artist: "King Von ft Lil Durk",
+        album: "Welcome To O'Block",
+        genre: "Hip hop . drill . gangsta rap",
+        cover: "https://upload.wikimedia.org/wikipedia/en/thumb/5/5e/King_Von_-_Welcome_to_O%27Block.png/250px-King_Von_-_Welcome_to_O%27Block.png",
+        audio: "Songs/King Von - All These Niggas (Feat Lil Durk).mp3",
+      },
+      {
+        title: "Ain't See It Coming",
+        artist: "King Von ft Moneybagg Yo",
+        album: "Welcome To O'Block",
+        genre: "Hip hop . drill . gangsta rap",
+        cover: "https://upload.wikimedia.org/wikipedia/en/thumb/5/5e/King_Von_-_Welcome_to_O%27Block.png/250px-King_Von_-_Welcome_to_O%27Block.png",
+        audio: "Songs/King Von - Ain't See It Coming (Feat Moneybagg Yo).mp3",
+      },
+      {
         title: "Changes",
         artist: "XXXTentacion",
         album: "?",
