@@ -1,6 +1,38 @@
     // ---Songs (with cover art and audio links) ---
     const songs = [  
       {
+        title: "Never Fold",
+        artist: "Fox Kid",
+        album: "Single",
+        genre: "Hip -  Hop",
+        cover: "Images/Fox Kid - Never Fold.png",
+        audio: "Songs/fox kid  never fold  official audio.m4a",
+      },
+      {
+        title: "No Return",
+        artist: "Fox Kid",
+        album: "Single",
+        genre: "Afro",
+        cover: "Images/Fox Kid - No Return.png",
+        audio: "Songs/fox kid  no return .m4a",
+      },
+      {
+        title: "Leaving",
+        artist: "Fox Kid",
+        album: "Single",
+        genre: "Drill",
+        cover: "Images/Fox Kid - Leaving.png",
+        audio: "Songs/- fox kid  leaving  audio  2025-02-22 10_29.m4a",
+      },
+      {
+        title: "Extravagant",
+        artist: "Nasty C ft Case Klowzed",
+        album: "Single",
+        genre: "Hip Hop/Rap",
+        cover: "https://th.bing.com/th/id/OSK.1zzFbqHFVWk5RMEnXoEarS5LhKWNTv7qsJ4ZO9zH61o?w=128&h=128&c=7&o=6&pid=SANGAM",
+        audio: "Songs/Nasty C - Extravagant ft. Case-Klowzed.mp3",
+      },
+      {
         title: "Mad At You",
         artist: "King Von ft Dreezy",
         album: "Welcome to O'Block",
