@@ -1344,7 +1344,7 @@
     audio.onerror = () => {
     alert('Audio file not found or cannot be played.');
     pauseAudio();
-    playerTitle.textContent = 'Error: Cannot play this song';
+      playerTitle.textContent = 'Error: Please check your internet connection if this error persists please contact us!!!!';
     };
     let playerCover = document.getElementById('player-cover');
     let playerTitle = document.getElementById('player-title');
