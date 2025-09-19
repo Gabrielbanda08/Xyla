@@ -797,7 +797,7 @@
         artist: "Juice WRLD",
         album: "Single",
         genre: "Hip-hop · trap",
-        cover: "https://upload.wikimedia.org/wikipedia/en/thumb/0/0e/Jack_Harlow_-_Come_Home_the_Kids_Miss_You.png/220px-Jack_Harlow_-_Come_Home_the_Kids_Miss_You.png",
+        cover: "https://tse1.mm.bing.net/th/id/OIP.2zc_PmkCCANfUOkWkexmYAHaHa?cb=ucfimg2ucfimg=1&rs=1&pid=ImgDetMain&o=7&rm=3",
         audio: "Songs/Juice WRLD freestyle sur Reine de Dadju Campfire Song official.mp3",
       },
       {
@@ -837,7 +837,7 @@
         artist: "Juice WRLD",
         album: "Single",
         genre: "Hip-hop · trap",
-        cover: "https://tse1.mm.bing.net/th/id/OIP.2zc_PmkCCANfUOkWkexmYAHaHa?cb=ucfimg2ucfimg=1&rs=1&pid=ImgDetMain&o=7&rm=3",
+        cover: "",
         audio: "Songs/Juice wrld- COMPORTEMENT Freestyle.mp3",
       },
       {
@@ -869,7 +869,7 @@
         artist: "Kendrick Lamar",
         album: "Mr. Morale And The Big Steppers",
         genre: "Hip-hop · Rap",
-        cover: "https://tse2.mm.bing.net/th/id/OIF.WkzqE3GXW6LrQ6zTfiElDA?cb=ucfimg2ucfimg=1&rs=1&pid=ImgDetMain&o=7&rm=3",
+        cover: "https://th.bing.com/th?id=OIF.%2fkFY6fd8NorlbZDmvSF0CQ&rs=1&pid=ImgDetMain&o=7&rm=3",
         audio: "Songs/Kendrick Lamar - Rich Spirit.mp3",
       },
       {
@@ -877,7 +877,7 @@
         artist: "Kendrick Lamar ft Baby Keem & Sam Dew",
         album: "Mr. Morale And The Big Steppers",
         genre: "Hip-hop · Rap",
-        cover: "https://tse2.mm.bing.net/th/id/OIF.WkzqE3GXW6LrQ6zTfiElDA?cb=ucfimg2ucfimg=1&rs=1&pid=ImgDetMain&o=7&rm=3",
+        cover: "https://th.bing.com/th?id=OIF.%2fkFY6fd8NorlbZDmvSF0CQ&rs=1&pid=ImgDetMain&o=7&rm=3",
         audio: "Songs/Kendrick Lamar - Savior ft. Baby Keem Sam Dew (Official Audio).mp3",
       },
       {
@@ -885,7 +885,7 @@
         artist: "Kendrick Lamar ft Kodack Black",
         album: "Mr. Morale And The Big Steppers",
         genre: "Hip-hop · Rap",
-        cover: "https://tse2.mm.bing.net/th/id/OIF.WkzqE3GXW6LrQ6zTfiElDA?cb=ucfimg2ucfimg=1&rs=1&pid=ImgDetMain&o=7&rm=3",
+        cover: "https://th.bing.com/th?id=OIF.%2fkFY6fd8NorlbZDmvSF0CQ&rs=1&pid=ImgDetMain&o=7&rm=3",
         audio: "Songs/Kendrick Lamar - Silent Hill ft. Kodak Black (Official Audio).mp3",
       },
       {
@@ -1037,7 +1037,7 @@
         artist: "King Von ft Lil Durk",
         album: "Grandson Vol. 1",
         genre: "Hip hop · drill",
-        cover: "hhttps://tse1.explicit.bing.net/th/id/OIP.pNpzT_PclqzvLYtujeo8TgHaHa?rs=1&pid=ImgDetMain&o=7&rm=3",
+        cover: "https://tse2.mm.bing.net/th/id/OIP.z0eoYOgl7zE-sVtlo9FtgQHaHa?rs=1&pid=ImgDetMain&o=7&rm=3",
         audio: "Songs/King Von (feat. Lil Durk) - Twin Nem (Audio).mp3",
       },
       {
