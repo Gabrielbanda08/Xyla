@@ -614,7 +614,7 @@
         album: "Single",
         genre: "Hip-hop · trap",
         cover: "https://upload.wikimedia.org/wikipedia/en/thumb/c/c8/DaBaby_-_Ball_If_I_Want_To.png/250px-DaBaby_-_Ball_If_I_Want_To.png",
-        audio: "Songs,DaBaby - BALL IF I WANT TO (Official Music Video).mp3",
+        audio: "Songs/DaBaby - BALL IF I WANT TO (Official Music Video).mp3",
       },
       {
         title: "Lonely",
@@ -1332,7 +1332,7 @@
       setTimeout(() => {
         document.getElementById('loading-screen').style.display = 'none';
         loadSection('home');
-      }, 5000); // 5 seconds delay for demo
+      }, 5000); // 5 seconds delay
     };
 
     // --- Audio Player Logic ---
@@ -1344,7 +1344,7 @@
     audio.onerror = () => {
     alert('Audio file not found or cannot be played.');
     pauseAudio();
-      playerTitle.textContent = 'Error: Please check your internet connection if this error persists please contact us!!!!';
+      playerTitle.textContent = 'Error: Cannot play this song';
     };
     let playerCover = document.getElementById('player-cover');
     let playerTitle = document.getElementById('player-title');
