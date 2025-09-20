@@ -16,3 +16,11 @@ It lets you play, pause, skip, and seek songs directly from your browser. 🎶
 ## 🌐 Visit the Live site
 
 👉 [Try it here](https://gabrielbanda08.github.io/Wave/)  
+
+## Screenshot
+
+<img src="Assets/Images/screenshot.png" src="screenshot.png">
+
+## Screenshot 2
+
+<img src="Assets/Images/screenshot 2.png" src="screenshot2.png">
