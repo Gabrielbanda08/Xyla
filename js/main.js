@@ -78,7 +78,7 @@
         album: "True 2 Myself",
         genre: "Hip Hop / Rap",
         cover: "https://th.bing.com/th/id/OIP.DJZecn_2FRR0-GII9wG1ogHaHa?o=7rm=3&rs=1&pid=ImgDetMain&o=7&rm=3",
-        audio: "Songs/Lil Tjay - Brothers.mp3",
+        audio: "Songs/Lil Tjay - Brothers (Remix) (Feat Lil Durk).mp3",
       },
       {
         title: "Decline",
