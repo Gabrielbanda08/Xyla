@@ -1,6 +1,14 @@
     // ---Songs (with cover art and audio links) ---
     const songs = [  
       {
+        title: "Miss My Dog",
+        artist: "Young Thug",
+        album: "Single",
+        genre: "Hip Hop / Rap",
+        cover: "https://images.genius.com/07406019e5dbcd843638d340669dd539.1000x1000x1.jpg",
+        audio: "Songs/Young Thug - Miss My Dogs.mp3",
+      },
+      {
         title: "Imma Shoot",
         artist: "Kodak Black",
         album: "Imma Shoot",
