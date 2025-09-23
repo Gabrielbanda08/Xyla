@@ -1,5 +1,6 @@
 # Wave
 
+<img src="Assets\Images\Wave🌊 Logo.png">
 Let the Music Flow with the Wave🌊
 
 Wave is a lightweight web-based music player built with **HTML, CSS, and JavaScript**.  
