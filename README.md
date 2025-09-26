@@ -1,9 +1,9 @@
-# Wave
+# Xyla
 
-<img src="Assets\Images\Wave🌊 Logo.png">
-Let the Music Flow with the Wave🌊
+<img src="Assets/Images/Xyla Logo 1.png">
+Let the Music Flow with the Xyla🌊
 
-Wave is a lightweight web-based music player built with **HTML, CSS, and JavaScript**.  
+Xyla is a lightweight web-based music player built with **HTML, CSS, and JavaScript**.  
 It lets you play, pause, skip, and seek songs directly from your browser. 🎶  
 
 ## 🚀 Features
@@ -16,7 +16,7 @@ It lets you play, pause, skip, and seek songs directly from your browser. 🎶
 
 ## 🌐 Visit the Live site
 
-👉 [Try it here](https://gabrielbanda08.github.io/Wave/)  
+👉 [Try it here](https://gabrielbanda08.github.io/Xyla/)  
 
 ## Screenshot
 
