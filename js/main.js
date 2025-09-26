@@ -1619,7 +1619,7 @@
         sectionArea.innerHTML = html;
       } else {
         html = `<div style="padding:2em 2em 1em 2em;">
-                  <h2>Welcome to Wave🌊!</h2>
+                  <h2>Welcome to Xyla!</h2>
                   <p>Enjoy your music.</p>
                 </div>`;
         sectionArea.innerHTML = html;
