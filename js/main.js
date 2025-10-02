@@ -1,3 +1,142 @@
+// --- Sidebar Toggle & Filter Button Logic ---
+document.addEventListener('DOMContentLoaded', function () {
+  const sidebar = document.getElementById('sidebar');
+  const sidebarToggle = document.getElementById('sidebar-toggle');
+  const mainContent = document.getElementById('main-content');
+  const audioBar = document.getElementById('audio-player-bar');
+  let sidebarHidden = false;
+  if (sidebarToggle) {
+    sidebarToggle.addEventListener('click', function () {
+      sidebarHidden = !sidebarHidden;
+      if (sidebarHidden) {
+        sidebar.style.display = 'none';
+        mainContent.style.marginLeft = '0';
+        if (audioBar) audioBar.style.left = '0';
+        sidebarToggle.innerHTML = '⮞';
+      } else {
+        sidebar.style.display = '';
+        mainContent.style.marginLeft = '';
+        if (audioBar) audioBar.style.left = '';
+        sidebarToggle.innerHTML = '☰';
+      }
+    });
+  }
+
+  // --- Filter Button Logic ---
+  const filterBtn = document.getElementById('filter-btn');
+  const musicCardsContainer = document.getElementById('music-cards-container');
+  const sidebarLinks = document.querySelectorAll('.sidebar-link');
+  let originalOrder = [];
+
+  // Show filter button only on Home section
+  function updateFilterBtnVisibility() {
+    const active = document.querySelector('.sidebar-link.active');
+    if (active && active.dataset.section === 'home') {
+      filterBtn.style.display = '';
+    } else {
+      filterBtn.style.display = 'none';
+    }
+  }
+  if (filterBtn) {
+    updateFilterBtnVisibility();
+    sidebarLinks.forEach(link => {
+      link.addEventListener('click', updateFilterBtnVisibility);
+    });
+  }
+
+  // Store original order of music cards
+  function cacheOriginalOrder() {
+    if (originalOrder.length === 0 && musicCardsContainer) {
+      originalOrder = Array.from(musicCardsContainer.children);
+    }
+  }
+  cacheOriginalOrder();
+
+  // Filter/Sort Dropdown
+  let filterMenu;
+  if (filterBtn) {
+    filterBtn.addEventListener('click', function (e) {
+      e.stopPropagation();
+      if (filterMenu) {
+        filterMenu.remove();
+        filterMenu = null;
+        return;
+      }
+      filterMenu = document.createElement('div');
+      const btnRect = filterBtn.getBoundingClientRect();
+      filterMenu.style.position = 'absolute';
+      filterMenu.style.top = (btnRect.bottom + window.scrollY + 6) + 'px';
+      filterMenu.style.left = (btnRect.left + window.scrollX) + 'px';
+      filterMenu.style.background = '#192742';
+      filterMenu.style.color = '#fff';
+      filterMenu.style.borderRadius = '8px';
+      filterMenu.style.boxShadow = '0 0 16px #1976d288';
+      filterMenu.style.padding = '0.5em 0';
+      filterMenu.style.zIndex = 1000;
+      filterMenu.style.minWidth = '160px';
+      filterMenu.innerHTML = `
+        <div class="filter-option" data-sort="title">Sort by Title</div>
+        <div class="filter-option" data-sort="artist">Sort by Artist</div>
+        <div class="filter-option" data-sort="album">Sort by Album</div>
+        <div class="filter-option" data-sort="default">Default Order</div>
+      `;
+      document.body.appendChild(filterMenu);
+      // Option click
+      filterMenu.querySelectorAll('.filter-option').forEach(opt => {
+        opt.style.padding = '0.6em 1.2em';
+        opt.style.cursor = 'pointer';
+        opt.addEventListener('mouseover', () => opt.style.background = '#1565c0');
+        opt.addEventListener('mouseout', () => opt.style.background = '');
+        opt.addEventListener('click', function () {
+          const sortType = opt.dataset.sort;
+          filterMenu.remove();
+          filterMenu = null;
+          sortMusicCards(sortType);
+        });
+      });
+      // Close on outside click
+      setTimeout(() => {
+        document.addEventListener('click', closeFilterMenu, { once: true });
+      }, 10);
+    });
+  }
+  function closeFilterMenu() {
+    if (filterMenu) {
+      filterMenu.remove();
+      filterMenu = null;
+    }
+  }
+
+  // Sort music cards
+  function sortMusicCards(type) {
+    const cards = Array.from(musicCardsContainer.querySelectorAll('.music-card'));
+    if (!cards.length) return;
+    let sorted;
+    if (type === 'title') {
+      sorted = cards.slice().sort((a, b) => a.querySelector('.music-card-title').textContent.localeCompare(b.querySelector('.music-card-title').textContent));
+    } else if (type === 'artist') {
+      sorted = cards.slice().sort((a, b) => a.querySelector('.music-card-artist').textContent.localeCompare(b.querySelector('.music-card-artist').textContent));
+    } else if (type === 'album') {
+      sorted = cards.slice().sort((a, b) => {
+        const aAlbum = a.querySelector('.music-card-album');
+        const bAlbum = b.querySelector('.music-card-album');
+        return (aAlbum ? aAlbum.textContent : '').localeCompare(bAlbum ? bAlbum.textContent : '');
+      });
+    } else if (type === 'default') {
+      // Restore original order
+      if (originalOrder.length) {
+        musicCardsContainer.innerHTML = '';
+        originalOrder.forEach(card => musicCardsContainer.appendChild(card));
+      }
+      return;
+    } else {
+      return;
+    }
+    // Remove all and re-append sorted
+    musicCardsContainer.innerHTML = '';
+    sorted.forEach(card => musicCardsContainer.appendChild(card));
+  }
+});
     // ---Songs (with cover art and audio links) ---
     const songs = [  
       {
@@ -1678,13 +1817,15 @@
         filteredSongs = (cards.filter(song =>
           song.title.toLowerCase().includes(query) ||
           song.artist.toLowerCase().includes(query) ||
-          song.genre.toLowerCase().includes(query)
+          (song.genre && song.genre.toLowerCase().includes(query)) ||
+          (song.album && song.album.toLowerCase().includes(query))
         ));
       } else {
         filteredSongs = (songs.filter(song =>
           song.title.toLowerCase().includes(query) ||
           song.artist.toLowerCase().includes(query) ||
-          song.genre.toLowerCase().includes(query)
+          (song.genre && song.genre.toLowerCase().includes(query)) ||
+          (song.album && song.album.toLowerCase().includes(query))
         ));
       }
       currentSongsArray = filteredSongs;
@@ -1867,7 +2008,7 @@ function seekAudio(e) {
     // Highlight playing song card
     function highlightPlayingCard(idx) {
       document.querySelectorAll('.music-card').forEach((card, i) => {
-        card.style.boxShadow = i === idx ? "0 0 36px 8px #1e88e5cc, 0 0 18px 4px #fff8" : "";
+        card.style.boxShadow = i === idx ? "0 0 36px 8px #1ecee5cc, 0 0 18px 4px #fff8" : "";
         card.style.transform = i === idx ? "scale(1.05)" : "";
       });
     }
@@ -1912,3 +2053,37 @@ function seekAudio(e) {
       document.getElementById('close-contacts').onclick = () => {
         contactsPanel.style.display = 'none';
       };
+
+      document.body.classList.remove('loading-done');
+const loadingScreen = document.getElementById('loading-screen');
+const observer = new MutationObserver(function () {
+  if (loadingScreen.style.display === 'none') {
+    document.body.classList.add('loading-done');
+    observer.disconnect();
+  }
+});
+observer.observe(loadingScreen, { attributes: true, attributeFilter: ['style'] });
+  // --- Sidebar Toggle & Filter Button Logic ---
+  document.addEventListener('DOMContentLoaded', function () {
+    const sidebar = document.getElementById('sidebar');
+    const sidebarToggle = document.getElementById('sidebar-toggle');
+    const mainContent = document.getElementById('main-content');
+    const audioBar = document.getElementById('audio-player-bar');
+    let sidebarHidden = false;
+    if (sidebarToggle) {
+      sidebarToggle.addEventListener('click', function () {
+        sidebarHidden = !sidebarHidden;
+        if (sidebarHidden) {
+          sidebar.style.display = 'none';
+          mainContent.style.marginLeft = '0';
+          if (audioBar) audioBar.style.left = '0';
+          sidebarToggle.innerHTML = '⮞';
+        } else {
+          sidebar.style.display = '';
+          mainContent.style.marginLeft = '';
+          if (audioBar) audioBar.style.left = '';
+          sidebarToggle.innerHTML = '☰';
+        }
+      });
+    }
+      });

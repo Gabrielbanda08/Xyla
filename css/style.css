@@ -1,3 +1,43 @@
+/* Toggle Button*/
+.sidebar-toggle-btn {
+  margin-left: 1.2em;
+   width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #5a050588 60%, #64b5f6 100%);
+  color: #fff;
+  border: none;
+  box-shadow: 0 4px 16px 0 #1976d288, 0 2px 8px #0004;
+  font-size: 1.7rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 1200;
+  transition: background 0.2s, box-shadow 0.2s, transform 0.18s;
+  outline: none;
+}
+.sidebar-toggle-btn:active, .sidebar-toggle-btn:hover {
+  background: #64b5f6;
+  box-shadow: 0 0 24px 6px #b6bbb8cc;
+  transform: scale(1.08);
+}
+@media screen and (max-width: 950px) {
+  .sidebar-toggle-btn {
+    width: 38px;
+    height: 38px;
+    font-size: 1.1rem;
+    margin-left: 0.7em;
+  }
+}
+@media screen and (max-width: 600px) {
+  .sidebar-toggle-btn {
+    width: 32px;
+    height: 32px;
+    font-size: 0.9rem;
+    margin-left: 0.4em;
+  }
+}
 .spinner {
     border: 6px solid #e3f2fd;
     border-top: 6px solid #1976d2;
@@ -286,7 +326,7 @@
     .player-btn {
       background: none;
       border: none;
-      color: #64b5f6;
+      color: #f66464;
       font-size: 1.35rem;
       cursor: pointer;
       padding: 0.5em;
@@ -294,9 +334,9 @@
       transition: background var(--transition), color var(--transition), box-shadow var(--transition), transform 0.16s;
     }
     .player-btn:active, .player-btn:hover {
-      background: #1565c0;
+      background: #5a050588;
       color: #fff;
-      box-shadow: 0 0 8px 2px #1976d2cc;
+      box-shadow: 0 0 8px 2px #19a7d2cc;
       transform: scale(1.16);
     }
     .player-progress {
@@ -331,7 +371,7 @@
     }
     .player-volume input[type=range] {
       width: 78px;
-      accent-color: #2196f3;
+      accent-color: #21ecf3;
     }
     /* Settings Panel */
     #settings-panel {
@@ -350,7 +390,7 @@
       background: var(--gradient);
       padding: 2.3rem 2.3rem 2rem 2.3rem;
       border-radius: var(--radius);
-      box-shadow: 0 0 42px 0 #2196f3cc;
+      box-shadow: 0 0 42px 0 #f66464;
       min-width: 320px;
       width: 96vw;
       max-width: 390px;
@@ -392,7 +432,7 @@
       margin-top: 1.5em;
     }
     .settings-btn {
-      background: #1565c0;
+      background: #5a050588;
       color: #fff;
       border: none;
       border-radius: 8px;
@@ -422,6 +462,14 @@
       color: #bbdefb;
       transform: scale(1.16);
     }
+    /* Hide toggle buttons until loading is done */
+      body:not(.loading-done) #sidebar-toggle {
+    display: none !important;
+    }
+    body.loading-done #sidebar-toggle {
+  display: flex !important;
+  visibility: visible !important;
+}
     /* Responsive */
     @media screen and (max-width: 950px) {
       #sidebar {
