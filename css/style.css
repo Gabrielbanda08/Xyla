@@ -371,7 +371,7 @@
     }
     .player-volume input[type=range] {
       width: 78px;
-      accent-color: #21ecf3;
+      accent-color: #f66464;
     }
     /* Settings Panel */
     #settings-panel {
@@ -469,7 +469,7 @@
     body.loading-done #sidebar-toggle {
   display: flex !important;
   visibility: visible !important;
-}
+  }
     /* Responsive */
     @media screen and (max-width: 950px) {
       #sidebar {
