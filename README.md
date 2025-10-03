@@ -1,6 +1,6 @@
 # Xyla
 
-<img src="Assets/Images/Xyla Logo 1.png">
+<img src="Assets/Images/Xyla Logo 2.png">
 Let the Music Flow with the Xyla🌊
 
 Xyla is a lightweight web-based music player built with **HTML, CSS, and JavaScript**.  

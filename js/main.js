@@ -156,14 +156,6 @@ document.addEventListener('DOMContentLoaded', function () {
         audio: "Songs/Kodak Black - Imma Shoot.mp3",
       },
       {
-        title: "Why Now",
-        artist: "Vocky-Ane",
-        album: "Single",
-        genre: "Trap . Pop . Drill",
-        cover: "Assets/Images/WhatsApp Image 2025-09-23 at 12.12.38_a0f8dd7d.jpg",
-        audio: "Songs/Vockyane - Why Now.opus",
-      },
-      {
         title: "2Step",
         artist: "Ed Sheeran ft Lil Baby",
         album: "=",
