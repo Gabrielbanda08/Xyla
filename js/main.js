@@ -1879,6 +1879,17 @@ document.addEventListener('DOMContentLoaded', function () {
       audio.load();
       playAudio();
       highlightPlayingCard(idx);
+
+      if ('mediaSession' in navigator) {
+        navigator.mediaSession.metadata = new MediaMetadata({
+          title: song.title,
+          artist: song.artist,
+          album: song.album || '',
+          artwork: [
+            { src: song.cover, sizes: '512x512', type: 'image/png' }
+          ]
+        });
+      }
     }
     function playAudio() {
       audio.play();
