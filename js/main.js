@@ -1890,7 +1890,14 @@ document.addEventListener('DOMContentLoaded', function () {
           ]
         });
       }
-    }
+    
+        navigator.mediaSession.setActionHandler('previoustrack', function() {
+          btnPrev.click();
+        });
+        navigator.mediaSession.setActionHandler('nexttrack', function() {
+         btnNext.click();
+      });
+      }
     function playAudio() {
       audio.play();
       isPlaying = true;
