@@ -1743,11 +1743,9 @@ document.addEventListener('DOMContentLoaded', function () {
         sectionArea.innerHTML = html;
         renderMusicCards(songs);
       } else if (section === 'playlists') {
-        html = `<div style="padding:2em 2em 1em 2em;">
-                  <h2>Playlists</h2>
-                  <p>Coming soon!</p>
-                </div>`;
-        sectionArea.innerHTML = html;
+        // Render the new playlists page
+        renderPlaylistsPage();
+        return;
       } else {
         html = `<div style="padding:2em 2em 1em 2em;">
                   <h2>Welcome to Xyla!</h2>
@@ -1890,13 +1888,18 @@ document.addEventListener('DOMContentLoaded', function () {
           ]
         });
       }
-    
         navigator.mediaSession.setActionHandler('previoustrack', function() {
           btnPrev.click();
         });
         navigator.mediaSession.setActionHandler('nexttrack', function() {
          btnNext.click();
       });
+        navigator.mediaSession.setActionHandler('play', function() {
+          playAudio();
+      });
+        navigator.mediaSession.setActionHandler('pause', function() {
+          pauseAudio();
+     });
       }
     function playAudio() {
       audio.play();
@@ -2073,6 +2076,11 @@ const observer = new MutationObserver(function () {
   }
 });
 observer.observe(loadingScreen, { attributes: true, attributeFilter: ['style'] });
+    
+// --- Click outside contacts  panel to close ---
+    contactsPanel.addEventListener('click', (e) => {
+      if (e.target === contactsPanel) contactsPanel.style.display = 'none';
+    });
   // --- Sidebar Toggle & Filter Button Logic ---
   document.addEventListener('DOMContentLoaded', function () {
     const sidebar = document.getElementById('sidebar');
@@ -2097,3 +2105,11 @@ observer.observe(loadingScreen, { attributes: true, attributeFilter: ['style'] }
       });
     }
       });
+audio.addEventListener('play', () => {
+  btnPlayPause.innerHTML = '&#10073;&#10073;'; // Pause icon
+  isPlaying = true;
+});
+audio.addEventListener('pause', () => {
+  btnPlayPause.innerHTML = '&#9654;'; // Play icon
+  isPlaying = false;
+});
