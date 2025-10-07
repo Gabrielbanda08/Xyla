@@ -438,10 +438,54 @@
       border-radius: 8px;
       padding: 0.5em 1.2em;
       font-size: 1rem;
+      text-decoration: none !important;
       cursor: pointer;
       box-shadow: 0 0 8px 0 #64b5f6bb;
       transition: background var(--transition), box-shadow var(--transition), transform 0.18s;
     }
+.settings-btn {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center; /* Center SVG when name is hidden */
+  gap: 0.7em;
+  min-height: 56px; /* Ensures vertical centering */
+  transition: justify-content 0.35s cubic-bezier(.4,0,.2,1);
+}
+
+.settings-btn .svg-icon {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: width 0.35s cubic-bezier(.4,0,.2,1), height 0.35s cubic-bezier(.4,0,.2,1), margin 0.35s cubic-bezier(.4,0,.2,1);
+}
+
+.settings-btn .contact-name {
+  max-width: 0;
+  opacity: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  transition: max-width 0.35s cubic-bezier(.4,0,.2,1), opacity 0.25s;
+  margin-left: 0.2em;
+}
+
+.settings-btn:hover {
+  justify-content: flex-start; /* Move SVG to left when hovered */
+}
+
+.settings-btn:hover .svg-icon {
+  width: 22px;
+  height: 22px;
+  margin-right: 0.7em;
+}
+
+.settings-btn:hover .contact-name {
+  max-width: 180px;
+  opacity: 1;
+}
     .settings-btn:hover {
       background: #1e88e5;
       box-shadow: 0 0 16px 2px #64b5f6cc;
