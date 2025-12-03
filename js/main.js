@@ -11,6 +11,13 @@ const MAX_ERRORS = 3; // Maximum consecutive errors before stopping
 let youtubePlayer = null; // YouTube player instance
 let isVideoOpen = false; // Track if YouTube video panel is open
 let currentMode = 'audio'; // 'audio' or 'video' - tracks current playback mode
+let audioContextInitialized = false; // Track if audio context is initialized
+let audioBuffer = null; // For Web Audio API
+let audioSource = null; // For Web Audio API
+
+// Audio context for background playback
+let audioContext = null;
+let gainNode = null;
 
 // Favorites and Playlists System
 let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
@@ -63,6 +70,36 @@ const closeContacts = document.getElementById('close-contacts');
 const saveSettings = document.getElementById('save-settings');
 const logoutBtn = document.getElementById('logout-btn');
 
+// Initialize audio context for background playback
+function initAudioContext() {
+  if (audioContext) return;
+  
+  try {
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    audioContext = new AudioContext();
+    gainNode = audioContext.createGain();
+    gainNode.connect(audioContext.destination);
+    
+    // Create media element source
+    const source = audioContext.createMediaElementSource(audio);
+    source.connect(gainNode);
+    
+    audioContextInitialized = true;
+    console.log('Audio Context initialized');
+  } catch (error) {
+    console.error('Failed to initialize Audio Context:', error);
+  }
+}
+
+// Resume audio context (required for Chrome autoplay policy)
+function resumeAudioContext() {
+  if (audioContext && audioContext.state === 'suspended') {
+    audioContext.resume().then(() => {
+      console.log('Audio Context resumed');
+    });
+  }
+}
+
 // Notification System
 function showNotification(message, type = 'info') {
   const notification = document.createElement('div');
@@ -99,28 +136,23 @@ function updateBackgroundCover(imageUrl) {
   
   let isPlaceholder = false;
   try {
-    // Use window.location.origin as base for relative URLs
     const urlObj = new URL(imageUrl, window.location);
     isPlaceholder = (urlObj.hostname === 'via.placeholder.com' || urlObj.hostname === 'placehold.co');
   } catch (e) {
-    isPlaceholder = true; // consider invalid URLs as placeholder/invalid
+    isPlaceholder = true;
   }
   if (!imageUrl || isPlaceholder) {
-    // Remove background if no valid image
     backgroundCover.classList.remove('active');
     return;
   }
   
-  // Create a new image to preload and check if it loads successfully
   const img = new Image();
   img.onload = function() {
-    // Set the background image and fade it in
     backgroundCover.style.backgroundImage = `url('${imageUrl}')`;
     backgroundCover.classList.add('active');
   };
   
   img.onerror = function() {
-    // Hide background if image fails to load
     backgroundCover.classList.remove('active');
   };
   
@@ -129,7 +161,6 @@ function updateBackgroundCover(imageUrl) {
 
 // Show Error Message
 function showError(message) {
-  // Remove any existing error messages
   const existingError = document.querySelector('.error-message');
   if (existingError) {
     existingError.remove();
@@ -139,7 +170,6 @@ function showError(message) {
   errorDiv.className = 'error-message';
   errorDiv.textContent = message;
   
-  // Insert error message at the top of section area
   const sectionArea = document.getElementById('section-area');
   if (sectionArea.firstChild) {
     sectionArea.insertBefore(errorDiv, sectionArea.firstChild);
@@ -147,7 +177,6 @@ function showError(message) {
     sectionArea.appendChild(errorDiv);
   }
   
-  // Auto remove after 5 seconds
   setTimeout(() => {
     if (errorDiv.parentNode) {
       errorDiv.remove();
@@ -157,10 +186,9 @@ function showError(message) {
 
 // Download Song Function
 function downloadSong(song, event) {
-  event.stopPropagation(); // Prevent triggering the card click event
+  event.stopPropagation();
   
   try {
-    // Create a temporary anchor element
     const a = document.createElement('a');
     a.href = song.audio;
     a.download = `${song.artist} - ${song.title}.mp3`;
@@ -168,7 +196,6 @@ function downloadSong(song, event) {
     a.click();
     document.body.removeChild(a);
     
-    // Show success feedback
     const downloadBtn = event.currentTarget;
     const originalHTML = downloadBtn.innerHTML;
     downloadBtn.innerHTML = `
@@ -179,7 +206,6 @@ function downloadSong(song, event) {
     `;
     downloadBtn.style.color = 'var(--success-color)';
     
-    // Reset button after 2 seconds
     setTimeout(() => {
       downloadBtn.innerHTML = originalHTML;
       downloadBtn.style.color = '';
@@ -206,14 +232,11 @@ function toggleFavorite(song, event) {
     showNotification(`Removed "${song.title}" from favorites`, 'info');
   }
   
-  // Update local storage
   localStorage.setItem('favorites', JSON.stringify(favorites));
   
-  // Update the button in the music card
   const btn = event.currentTarget;
   btn.classList.toggle('active', index === -1);
   
-  // If we are in the favorites section, refresh the view
   if (document.querySelector('.sidebar-link[data-section="favorites"]').classList.contains('active')) {
     loadSection('favorites');
   }
@@ -227,7 +250,6 @@ function addToPlaylist(playlistName, song, event) {
     playlists[playlistName] = [];
   }
   
-  // Check if song is already in the playlist
   const index = playlists[playlistName].findIndex(s => s.id === song.id);
   if (index === -1) {
     playlists[playlistName].push(song);
@@ -258,13 +280,11 @@ function updateRepeatButton() {
       break;
   }
   
-  // Update active state
   btnRepeat.classList.toggle('active', repeatMode > 0);
 }
 
 // Initialize YouTube Player
 function initYouTubePlayer() {
-  // Check if YouTube IFrame API is loaded
   if (typeof YT === 'undefined' || typeof YT.Player === 'undefined') {
     console.error('YouTube IFrame API not loaded');
     return;
@@ -294,7 +314,6 @@ function onYouTubePlayerReady(event) {
 
 // YouTube Player State Change
 function onYouTubePlayerStateChange(event) {
-  // Only handle YouTube player state when in video mode
   if (currentMode !== 'video') return;
   
   if (event.data === YT.PlayerState.PLAYING) {
@@ -306,18 +325,14 @@ function onYouTubePlayerStateChange(event) {
     btnPlayPause.textContent = '▶';
     updateMediaSessionPlaybackState();
     
-    // Handle video ended
     if (event.data === YT.PlayerState.ENDED) {
       if (repeatMode === 2) {
-        // Repeat one
         youtubePlayer.seekTo(0);
         youtubePlayer.playVideo();
       } else if (repeatMode === 1 || isShuffled) {
-        // Repeat all or shuffle - play next audio song
-        currentMode = 'audio'; // Switch back to audio mode
+        currentMode = 'audio';
         playNext();
       } else {
-        // No repeat - stop at end
         isPlaying = false;
         btnPlayPause.textContent = '▶';
         updateMediaSessionPlaybackState();
@@ -340,7 +355,6 @@ function loadYouTubeVideo(song) {
   }
   
   try {
-    // Switch to video mode and stop audio
     currentMode = 'video';
     if (isPlaying && currentMode === 'audio') {
       audio.pause();
@@ -352,11 +366,8 @@ function loadYouTubeVideo(song) {
     videoSongTitle.textContent = song.title;
     videoSongArtist.textContent = song.artist;
     
-    // Show video panel
     youtubePanel.style.display = 'flex';
     isVideoOpen = true;
-    
-    // Update video button state
     btnVideo.classList.add('active');
     
   } catch (error) {
@@ -375,12 +386,10 @@ function closeYouTubeVideo() {
   isPlaying = false;
   btnPlayPause.textContent = '▶';
   
-  // Switch back to audio mode if there's a current song
   if (audio.src) {
     currentMode = 'audio';
   }
   
-  // Update video button state
   btnVideo.classList.remove('active');
 }
 
@@ -399,6 +408,15 @@ function debounce(func, wait) {
 
 // Initialize App
 document.addEventListener('DOMContentLoaded', function() {
+  // Show audio context notice
+  document.getElementById('audio-context-notice').style.display = 'block';
+  
+  // Initialize audio context on first user interaction
+  document.addEventListener('click', function() {
+    initAudioContext();
+    resumeAudioContext();
+    document.getElementById('audio-context-notice').style.display = 'none';
+  }, { once: true });
   
   // Hide loading screen after 2 seconds
   setTimeout(() => {
@@ -420,17 +438,13 @@ document.addEventListener('DOMContentLoaded', function() {
   // Initialize Media Session API
   initMediaSession();
   
-  // Initialize background with no image
   updateBackgroundCover(null);
-  
-  // Initialize repeat button
   updateRepeatButton();
   
   // Initialize YouTube player when API is ready
   if (window.YT) {
     initYouTubePlayer();
   } else {
-    // Wait for YouTube API to load
     window.onYouTubeIframeAPIReady = function() {
       initYouTubePlayer();
     };
@@ -438,7 +452,34 @@ document.addEventListener('DOMContentLoaded', function() {
   
   // Add mobile swipe gestures
   initSwipeGestures();
+  
+  // Add visibility change handler for background playback
+  setupVisibilityHandlers();
 });
+
+// Setup visibility change handlers for background playback
+function setupVisibilityHandlers() {
+  // Don't pause audio when tab is hidden
+  document.addEventListener('visibilitychange', function() {
+    if (document.hidden) {
+      // Tab is hidden - continue playing
+      console.log('Tab hidden, continuing playback');
+    } else {
+      // Tab is visible
+      console.log('Tab visible');
+      // Resume audio context if needed
+      resumeAudioContext();
+    }
+  });
+  
+  // Handle page show event
+  window.addEventListener('pageshow', function(event) {
+    if (event.persisted) {
+      // Page was restored from bfcache
+      resumeAudioContext();
+    }
+  });
+}
 
 // Initialize Swipe Gestures for Mobile
 function initSwipeGestures() {
@@ -463,16 +504,13 @@ function initSwipeGestures() {
     const diffX = endX - startX;
     const diffY = endY - startY;
     
-    // Only consider horizontal swipes with minimal vertical movement
     if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 50) {
       if (diffX > 0) {
-        // Swipe right - show sidebar on mobile
         if (window.innerWidth <= 1024) {
           sidebar.classList.add('active');
           showSwipeIndicator('Menu opened');
         }
       } else {
-        // Swipe left - hide sidebar on mobile
         if (window.innerWidth <= 1024 && sidebar.classList.contains('active')) {
           sidebar.classList.remove('active');
           showSwipeIndicator('Menu closed');
@@ -510,14 +548,11 @@ function setupEventListeners() {
       e.preventDefault();
       const section = this.getAttribute('data-section');
       
-      // Update active state
       sidebarLinks.forEach(l => l.classList.remove('active'));
       this.classList.add('active');
       
-      // Load section
       loadSection(section);
       
-      // Close sidebar on mobile after selection
       if (window.innerWidth <= 1024) {
         sidebar.classList.remove('active');
       }
@@ -639,6 +674,9 @@ function initAudioPlayer() {
   volumeRange.addEventListener('input', function() {
     audio.volume = this.value;
     currentVolume = this.value;
+    if (gainNode) {
+      gainNode.gain.value = this.value;
+    }
   });
   
   // Audio events
@@ -657,23 +695,18 @@ function initAudioPlayer() {
   });
   
   audio.addEventListener('ended', function() {
-    // Only handle audio ended events when in audio mode
     if (currentMode !== 'audio') return;
     
-    errorCount = 0; // Reset error count on successful play completion
+    errorCount = 0;
     
     if (repeatMode === 2) {
-      // Repeat one
       audio.currentTime = 0;
       audio.play().catch(e => {
         console.error('Error replaying current song:', e);
-        showError('Error replaying current song');
       });
     } else if (repeatMode === 1 || isShuffled) {
-      // Repeat all or shuffle
       playNext();
     } else {
-      // No repeat - stop at end
       isPlaying = false;
       btnPlayPause.textContent = '▶';
       updateMediaSessionPlaybackState();
@@ -692,32 +725,29 @@ function initAudioPlayer() {
     }
   });
 
-  // FIXED: Handle audio errors properly to prevent rapid song changes
+  // Improved audio error handling
   audio.addEventListener('error', function(e) {
-    // Only handle audio errors when in audio mode
     if (currentMode !== 'audio') return;
     
-    console.error('Audio error:', e);
+    console.error('Audio error:', audio.error);
     errorCount++;
     
     if (errorCount >= MAX_ERRORS) {
-      // Stop trying after too many errors
       showError('Unable to play audio. Please try another song.');
       isPlaying = false;
       btnPlayPause.textContent = '▶';
       return;
     }
     
-    // Show error message
     const currentSong = currentSongsList[currentSongIndex];
     showError(`Error playing "${currentSong.title}". Trying next song...`);
     
-    // Try to play next song after a delay, but not immediately
+    // Try to play next song with delay
     setTimeout(() => {
       if (errorCount < MAX_ERRORS) {
         playNext();
       }
-    }, 2000);
+    }, 1000);
   });
 }
 
@@ -727,18 +757,13 @@ function startDrag(e) {
   
   isDragging = true;
   progressBar.classList.add('dragging');
-  
-  // Seek to the position immediately on mousedown/touchstart
   seekAudio(e);
 }
 
 function whileDrag(e) {
   if (!isDragging || currentMode !== 'audio') return;
   
-  // Prevent default to avoid text selection during drag
   e.preventDefault();
-  
-  // Update the seek position while dragging
   seekAudio(e);
 }
 
@@ -756,7 +781,6 @@ function seekAudio(e) {
   const rect = progressBar.getBoundingClientRect();
   let clientX;
   
-  // Get clientX based on event type (mouse or touch)
   if (e.type.includes('touch')) {
     clientX = e.touches[0].clientX;
   } else {
@@ -766,25 +790,20 @@ function seekAudio(e) {
   const percent = (clientX - rect.left) / rect.width;
   const newTime = Math.max(0, Math.min(percent * audio.duration, audio.duration));
   
-  // Update audio current time
   audio.currentTime = newTime;
   
-  // Update progress bar and time display immediately
   const progressPercent = (newTime / audio.duration) * 100;
   progressInner.style.width = progressPercent + '%';
   playerCurrent.textContent = formatTime(newTime);
   
-  // Update Media Session position
   updateMediaSessionPositionState();
 }
 
 // Initialize Media Session API with enhanced mobile support
 function initMediaSession() {
-  // Check if Media Session API is supported
   if ('mediaSession' in navigator) {
     console.log('Media Session API supported');
     
-    // Set media session action handlers with better error handling
     try {
       navigator.mediaSession.setActionHandler('play', function() {
         console.log('Media Session: Play action');
@@ -806,7 +825,6 @@ function initMediaSession() {
         playNext();
       });
 
-      // Optional handlers - only set if supported
       try {
         navigator.mediaSession.setActionHandler('seekbackward', function(details) {
           const skipTime = details.seekOffset || 10;
@@ -867,21 +885,17 @@ function updateMediaSessionPositionState() {
 function updateMediaSessionMetadata(song) {
   if ('mediaSession' in navigator) {
     try {
-      // Create artwork array with multiple sizes for better compatibility
       const artwork = [];
       const sizes = ['96x96', '128x128', '192x192', '256x256', '384x384', '512x512'];
       
-      // Use the song's cover image for all sizes
-      // The browser will automatically choose the best size
       sizes.forEach(size => {
         artwork.push({
           src: song.cover,
           sizes: size,
-          type: getImageMimeType(song.cover) // Dynamically detect image type
+          type: getImageMimeType(song.cover)
         });
       });
 
-      // Update media session metadata
       navigator.mediaSession.metadata = new MediaMetadata({
         title: song.title || 'Unknown Title',
         artist: song.artist || 'Unknown Artist',
@@ -1074,7 +1088,6 @@ function loadSection(section) {
   
   sectionArea.innerHTML = content;
   
-  // Reattach event listeners to music cards
   setTimeout(() => {
     const musicCards = document.querySelectorAll('.music-card');
     musicCards.forEach((card, index) => {
@@ -1083,7 +1096,6 @@ function loadSection(section) {
       });
     });
     
-    // Lazy load images
     lazyLoadImages();
   }, 0);
 }
@@ -1123,7 +1135,6 @@ function renderMusicCards(songsArray) {
 
 // Show Playlist Dropdown
 function showPlaylistDropdown(button, song) {
-  // Remove any existing dropdowns
   const existingDropdown = document.querySelector('.playlist-dropdown');
   if (existingDropdown) {
     existingDropdown.remove();
@@ -1139,7 +1150,6 @@ function showPlaylistDropdown(button, song) {
 
   button.parentNode.appendChild(dropdown);
 
-  // Close dropdown when clicking outside
   const closeDropdown = function(e) {
     if (!dropdown.contains(e.target)) {
       dropdown.remove();
@@ -1161,10 +1171,8 @@ function loadPlaylist(playlistName) {
   if (container) {
     container.innerHTML = renderMusicCards(playlistSongs);
     
-    // Lazy load images for filtered results
     setTimeout(lazyLoadImages, 0);
     
-    // Reattach event listeners
     setTimeout(() => {
       const musicCards = document.querySelectorAll('.music-card');
       musicCards.forEach((card, index) => {
@@ -1208,10 +1216,8 @@ function filterSongs(query) {
   if (container) {
     container.innerHTML = renderMusicCards(filteredSongs);
     
-    // Lazy load images for filtered results
     setTimeout(lazyLoadImages, 0);
     
-    // Reattach event listeners
     setTimeout(() => {
       const musicCards = document.querySelectorAll('.music-card');
       musicCards.forEach((card, index) => {
@@ -1232,10 +1238,8 @@ function filterByGenre(genre) {
   if (container) {
     container.innerHTML = renderMusicCards(filteredSongs);
     
-    // Lazy load images for filtered results
     setTimeout(lazyLoadImages, 0);
     
-    // Reattach event listeners
     setTimeout(() => {
       const musicCards = document.querySelectorAll('.music-card');
       musicCards.forEach((card, index) => {
@@ -1247,7 +1251,7 @@ function filterByGenre(genre) {
   }
 }
 
-// Enhanced Play Song function
+// Enhanced Play Song function with better error handling
 function playSong(index, songsArray = songs) {
   try {
     currentSongIndex = index;
@@ -1260,6 +1264,10 @@ function playSong(index, songsArray = songs) {
     }
     
     console.log('Playing song:', song.title);
+    
+    // Ensure audio context is initialized
+    initAudioContext();
+    resumeAudioContext();
     
     // Switch to audio mode and stop video if playing
     currentMode = 'audio';
@@ -1302,7 +1310,15 @@ function playSong(index, songsArray = songs) {
         console.log('Audio playback started successfully');
       }).catch(error => {
         console.error('Error playing audio:', error);
-        showError('Error playing audio. Please try again.');
+        
+        // Check if it's an autoplay policy error
+        if (error.name === 'NotAllowedError') {
+          showError('Click anywhere on the page to enable audio playback');
+          document.getElementById('audio-context-notice').style.display = 'block';
+        } else {
+          showError('Error playing audio. Please try another song.');
+        }
+        
         isPlaying = false;
         btnPlayPause.textContent = '▶';
       });
@@ -1324,6 +1340,9 @@ function playSong(index, songsArray = songs) {
 
 // Toggle Play/Pause
 function togglePlayPause() {
+  // Resume audio context first
+  resumeAudioContext();
+  
   if (currentMode === 'audio') {
     // Handle audio play/pause
     if (!audio.src) {
@@ -1432,20 +1451,11 @@ function formatTime(seconds) {
 document.addEventListener('DOMContentLoaded', function() {
   setTimeout(lazyLoadImages, 1000);
 });
+
 // Global error handling
 window.addEventListener('error', function(e) {
   console.error('Global error:', e.error);
   showError('An unexpected error occurred');
-});
-
-// Handle page visibility changes
-document.addEventListener('visibilitychange', function() {
-  if (document.hidden) {
-    // Page is hidden, pause audio if needed
-    if (isPlaying && currentMode === 'audio') {
-      audio.pause();
-    }
-  }
 });
 
 // Handle online/offline status
@@ -1457,7 +1467,7 @@ window.addEventListener('offline', function() {
   showNotification('You are offline', 'error');
 });
 
-// Service Worker registration for PWA (optional)
+// Service Worker registration for PWA
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', function() {
     navigator.serviceWorker.register('/sw.js').then(function(registration) {
@@ -1467,3 +1477,10 @@ if ('serviceWorker' in navigator) {
     });
   });
 }
+
+// Add click handler to resume audio context anywhere on the page
+document.addEventListener('click', function() {
+  resumeAudioContext();
+  // Hide the audio context notice if it's shown
+  document.getElementById('audio-context-notice').style.display = 'none';
+});

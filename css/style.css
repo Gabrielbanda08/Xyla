@@ -1533,3 +1533,105 @@ select:focus-visible {
     transition-duration: 0.01ms !important;
   }
 }
+/* Audio context notice styles */
+.audio-context-notice {
+  position: fixed;
+  bottom: 100px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: linear-gradient(135deg, #1587c9, #5a67d8);
+  color: white;
+  padding: 12px 24px;
+  border-radius: 25px;
+  font-size: 14px;
+  font-weight: 500;
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 8px 32px rgba(21, 135, 201, 0.4);
+  animation: pulse 2s infinite;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.audio-context-notice i {
+  font-size: 16px;
+}
+
+@keyframes pulse {
+  0% {
+    transform: translateX(-50%) scale(1);
+  }
+  50% {
+    transform: translateX(-50%) scale(1.05);
+  }
+  100% {
+    transform: translateX(-50%) scale(1);
+  }
+}
+
+/* Audio player improvements */
+#audio-player-bar {
+  background: rgba(26, 31, 46, 0.9);
+  backdrop-filter: blur(20px);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Fix for mobile audio context */
+@media (max-width: 768px) {
+  .audio-context-notice {
+    bottom: 80px;
+    font-size: 13px;
+    padding: 10px 20px;
+  }
+  
+  /* Ensure audio continues playing when screen is locked */
+  #audio {
+    -webkit-playback-target: media;
+  }
+}
+
+/* Fix for iOS audio */
+@supports (-webkit-touch-callout: none) {
+  #audio {
+    -webkit-tap-highlight-color: transparent;
+  }
+  
+  #audio-player-bar {
+    -webkit-user-select: none;
+    -webkit-touch-callout: none;
+  }
+}
+
+/* Add smooth transitions for player states */
+.music-card.playing {
+  animation: playing-pulse 2s infinite;
+}
+
+@keyframes playing-pulse {
+  0% {
+    box-shadow: 0 0 0 2px var(--primary-color), 0 8px 24px rgba(21, 135, 201, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 0 3px var(--primary-color), 0 12px 32px rgba(21, 135, 201, 0.5);
+  }
+  100% {
+    box-shadow: 0 0 0 2px var(--primary-color), 0 8px 24px rgba(21, 135, 201, 0.3);
+  }
+}
+
+/* Improve volume slider */
+.volume-slider {
+  cursor: pointer;
+  background: linear-gradient(to right, var(--primary-color) 80%, rgba(255, 255, 255, 0.1) 80%);
+}
+
+.volume-slider::-webkit-slider-thumb {
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+  transition: transform 0.2s;
+}
+
+.volume-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.2);
+}

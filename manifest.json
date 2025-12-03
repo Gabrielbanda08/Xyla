@@ -6,7 +6,7 @@
   "display": "standalone",
   "background_color": "#0f1419",
   "theme_color": "#1587c9",
-  "orientation": "portrait",
+  "orientation": "any",
   "icons": [
     {
       "src": "Assets/Images/Musiv.png",
@@ -18,5 +18,8 @@
       "sizes": "512x512",
       "type": "image/png"
     }
-  ]
+  ],
+  "categories": ["music", "entertainment"],
+  "prefer_related_applications": false,
+  "scope": "/"
 }
