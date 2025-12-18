@@ -21,9 +21,18 @@ self.addEventListener('install', function(event) {
 
 self.addEventListener('fetch', function(event) {
   // Skip YouTube API and other external resources
-  if (event.request.url.includes('youtube.com') || 
-      event.request.url.includes('googleapis.com')) {
-    return fetch(event.request);
+  try {
+    const reqUrl = new URL(event.request.url);
+    const hostname = reqUrl.hostname;
+    // Only skip if the request's host is exactly or ends with ".youtube.com" or ".googleapis.com"
+    if (
+      hostname === 'youtube.com' || hostname.endsWith('.youtube.com') ||
+      hostname === 'googleapis.com' || hostname.endsWith('.googleapis.com')
+    ) {
+      return fetch(event.request);
+    }
+  } catch (e) {
+    // In case of invalid URL, just proceed to cache logic
   }
   
   event.respondWith(
