@@ -114,7 +114,7 @@
         duration: 200
       },
       {
-        id: 1,
+        id: 12,
         title: "Circadian Rhythm",
         artist: "Drake",
         album: "100 Gigs",
@@ -124,6 +124,7 @@
         duration: 200
       },
       {
+        id: 13,
         title: "Miss My Dog",
         artist: "Young Thug",
         album: "Single",
@@ -132,6 +133,7 @@
         audio: "Songs/Young Thug - Miss My Dogs.mp3",
       },
       {
+        id: 14,
         title: "Imma Shoot",
         artist: "Kodak Black",
         album: "Imma Shoot",
@@ -140,6 +142,7 @@
         audio: "Songs/Kodak Black - Imma Shoot.mp3",
       },
       {
+        id: 15,
         title: "2Step",
         artist: "Ed Sheeran ft Lil Baby",
         album: "=",
@@ -148,6 +151,7 @@
         audio: "Songs/Ed_Sheeran_-_2step_(feat._Lil_Baby)_-_[Official_Video](MP3_160K).mp3",
       },
       {
+        id: 16,
         title: "Sorround Sound",
         artist: "JID ft 21 Savage & Baby Tate",
         album: "The Forever Story",
@@ -156,6 +160,7 @@
         audio: "Songs/JID - Surround Sound ft. 21 Savage Baby Tate.mp3",
       },
       {
+        id: 17,
         title: "Ramen & OJ",
         artist: "Joyner Lucas ft Lil Baby",
         album: "Single",
@@ -164,6 +169,7 @@
         audio: "Songs/Joyner Lucas - Ramen OJ (Lyrics) ft. Lil Baby.mp3",
       },
       {
+        id: 18,
         title: "California Breeze",
         artist: "Lil Baby",
         album: "It's Only Me",
@@ -172,6 +178,7 @@
         audio: "Songs/Lil Baby - California Breeze (Official Video).m4a",
       },
       {
+        id: 19,
         title: "Complicated Love",
         artist: "Lil Baby ft Fridayy",
         album: "",
@@ -180,6 +187,7 @@
         audio: "Songs/Lil Baby - Complicated Love ft. Fridayy (Music Video).mp3",
       },
       {
+        id: 20,
         title: "Drugs Talking",
         artist: "Lil Baby",
         album: "WHAM",
@@ -188,6 +196,7 @@
         audio: "Songs/Lil Baby - Drugs Talkin (Official Visualizer).mp3",
       },
       {
+        id: 21,
         title: "Dum,Dumb Dumber",
         artist: "Lil Baby ft Future & Young Thug",
         album: "WHAM",
@@ -196,6 +205,7 @@
         audio: "Songs/Lil Baby - Dum dumb dumber feat Young Thug Future (Official Visualizer).mp3",
       },
       {
+        id: 22,
         title: "Emotionally Scarred",
         artist: "Lil Baby",
         album: "My Turn",
@@ -204,6 +214,7 @@
         audio: "Songs/Lil Baby - Emotionally Scarred.mp3",
       },
       {
+        id: 23,
         title: "Tobey",
         artist: "Eminem ft Big Sean & BabyTron",
         album: "The Death Of Slim Shady",
@@ -212,6 +223,7 @@
         audio: "Songs/Eminem - Tobey (feat. Big Sean Babytron) Official Audio.mp3",
       },
       {
+        id: 24,
         title: "Heyy",
         artist: "Lil Baby",
         album: "It's Only Me",
@@ -220,6 +232,7 @@
         audio: "Songs/Lil Baby - Heyy (Official Video).mp3",
       },
       {
+        id: 25,
         title: "In A Minute",
         artist: "Lil Baby",
         album: "In A Minute",
@@ -228,6 +241,7 @@
         audio: "Songs/Lil Baby - In A Minute (Official Video).mp3",
       },
       {
+        id: 26,
         title: "Merch Madness",
         artist: "Lil Baby",
         album: "Merch Madness",
@@ -236,6 +250,7 @@
         audio: "Songs/Lil Baby - Merch Madness.mp3",
       },
       {
+        id: 27,
         title: "Outfit",
         artist: "Lil Baby ft 21 Savage",
         album: "WHAM",
@@ -244,6 +259,7 @@
         audio: "Songs/Lil Baby - Outfit Feat 21 Savage (Official Visualizer).mp3",
       },
       {
+        id: 28,
         title: "So Sorry",
         artist: "Lil Baby",
         album: "WHAM",
@@ -252,6 +268,7 @@
         audio: "Songs/Lil Baby - So Sorry (Official Visualizer).mp3",
       },
       {
+        id: 29,
         title: "The Bigger Picture",
         artist: "Lil Baby",
         album: "My Turn (Deluxe)",
@@ -260,6 +277,7 @@
         audio: "Songs/Lil Baby - The Bigger Picture (Official Music Video).mp3",
       },
       {
+        id: 30,
         title: "We Paid",
         artist: "Lil Baby ft 42 Dugg",
         album: "My Turn (Deluxe)",
@@ -268,6 +286,7 @@
         audio: "Songs/Lil Baby - We Paid (Lyrics) ft. 42 Dugg.mp3",
       },
       {
+        id: 31,
         title: "Woah",
         artist: "Lil Baby",
         album: "Woah",
@@ -276,6 +295,7 @@
         audio: "Songs/Lil Baby - Woah (Official Audio).mp3",
       },
       {
+        id: 32,
         title: "Freestyle",
         artist: "Lil Baby",
         album: "Too Hard",
@@ -284,6 +304,7 @@
         audio: "Songs/Lil Baby Freestyle Official Music Video.mp3",
       },
       {
+        id: 33,
         title: "Lying",
         artist: "Lil Baby & Lil Durk",
         album: "The Voice Of The Heroes",
@@ -292,6 +313,7 @@
         audio: "Songs/Lil Baby Lil Durk - Lying (Official Audio).mp3",
       },
       {
+        id: 34,
         title: "Medical",
         artist: "Lil Baby & Lil Durk",
         album: "The Voice Of The Heroes",
@@ -300,6 +322,7 @@
         audio: "Songs/Lil Baby Lil Durk - Medical (Official Audio).mp3",
       },
       {
+        id: 35,
         title: "Voice Of The Heroes",
         artist: "Lil Baby & Lil Durk",
         album: "The Voice Of The Heroes",
@@ -308,6 +331,7 @@
         audio: "Songs/Lil Baby Lil Durk - Voice of the Heroes (Official Video).mp3",
       },
       {
+        id: 36,
         title: "Forever",
         artist: "Lil Baby ft Fridayy",
         album: "It's Only Me",
@@ -316,6 +340,7 @@
         audio: "Songs/Lil Baby, Fridayy - Forever (Official Music Video).mp3",
       },
       {
+        id: 37,
         title: "Drip Too Hard",
         artist: "Lil Baby & Gunna",
         album: "Drip Harder",
@@ -324,6 +349,7 @@
         audio: "Songs/Lil Baby, Fridayy - Forever (Official Music Video).mp3",
       },
       {
+        id: 38,
         title: "Close Friends",
         artist: "Lil Baby & Gunna",
         album: "Drip Harder",
@@ -332,6 +358,7 @@
         audio: "Songs/Lil Baby, Fridayy - Forever (Official Music Video).mp3",
       },
       {
+        id: 39,
         title: "Spin",
         artist: "Kodak Black",
         album: "Kutthroat Bill: Vol. 1",
@@ -340,6 +367,7 @@
         audio: "Songs/Kodak Black - Spin.mp3",
       },
       {
+        id: 40,
         title: "Walk",
         artist: "Kodak Black",
         album: "Kutthroat Bill: Vol. 1",
@@ -348,6 +376,7 @@
         audio: "Songs/Kodak Black - Walk.mp3",
       },
       {
+        id: 41,
         title: "Hit Stick",
         artist: "Kodak Black",
         album: "Single",
@@ -356,6 +385,7 @@
         audio: "Songs/Kodak Black - Hit Stick (Lyrics).mp3",
       },
       {
+        id: 42,
         title: "Last Day In",
         artist: "Kodak Black",
         album: "Single",
@@ -364,6 +394,7 @@
         audio: "Songs/Kodak Black - Last Day In Official Music Video.mp3",
       },
       {
+        id: 43,
         title: "Super Gremlin",
         artist: "Kodack Black",
         album: "Back For Everything",
@@ -372,6 +403,7 @@
         audio: "Songs/Kodak Black - Super Gremlin (Lyrics).mp3",
       },
       {
+        id: 44,
         title: "300 Blackout",
         artist: "Kodak Black",
         album: "Kuttthroat Bill Vol 1.",
@@ -380,6 +412,7 @@
         audio: "Songs/Kodak-Black-300-Blackout-(HipHopKit.com).mp3",
       },
       {
+        id: 45,
         title: "Feelin' Peachy",
         artist: "Kodak Black",
         album: "Happy Birthday Kodak",
@@ -388,6 +421,7 @@
         audio: "Songs/Kodak-Black-Feelin-Peachy-(HipHopKit.com).mp3",
       },
       {
+        id: 46,
         title: "Purple Stamp",
         artist: "Kodack Black",
         album: "Back For Everthing",
@@ -396,6 +430,7 @@
         audio: "Songs/Kodak-Black-Purple-Stamp-(HipHopKit.com).mp3",
       },
       {
+        id: 47,
         title: "Apex",
         artist: "Lil Tjay",
         album: "Single",
@@ -404,6 +439,7 @@
         audio: "Songs/Lil Tjay - Apex.mp3",
       },
       {
+        id: 48,
         title: "Brothers",
         artist: "Lil Tjay",
         album: "True 2 Myself",
@@ -412,6 +448,7 @@
         audio: "Songs/Lil Tjay - Brothers.mp3",
       },
       {
+        id: 49,
         title: "Brothers (Remix)",
         artist: "Lil Tjay ft Lil Durk",
         album: "True 2 Myself",
@@ -420,6 +457,7 @@
         audio: "Songs/Lil Tjay - Brothers (Remix) (Feat Lil Durk).mp3",
       },
       {
+        id: 50,
         title: "Decline",
         artist: "Lil Tjay ft Lil Baby",
         album: "True 2 Myself",
@@ -428,6 +466,7 @@
         audio: "Songs/Lil Tjay - Decline (Feat Lil Baby).mp3",
       },
       {
+        id: 51,
         title: "FN",
         artist: "Lil Tjay",
         album: "True 2 Myself",
@@ -436,6 +475,7 @@
         audio: "Songs/Lil Tjay - FN.mp3",
       },
       {
+        id: 52,
         title: "Hold On",
         artist: "Lil Tjay",
         album: "True 2 Myself",
@@ -444,6 +484,7 @@
         audio: "Songs/Lil Tjay - Hold On.mp3",
       },
       {
+        id: 53,
         title: "No No",
         artist: "Lil Tjay",
         album: "Single",
@@ -452,6 +493,7 @@
         audio: "Songs/Lil Tjay - No No.mp3",
       },
       {
+        id: 54,
         title: "One Take",
         artist: "Lil Tjay",
         album: "True 2 Myself",
@@ -460,6 +502,7 @@
         audio: "Songs/Lil Tjay - One Take.mp3",
       },
       {
+        id: 55,
         title: "Ruthless",
         artist: "Lil Tjay",
         album: "True 2 Myself",
@@ -468,6 +511,7 @@
         audio: "Songs/Lil Tjay - Ruthless (Feat Jay Critch).mp3",
       },
       {
+        id: 56,
         title: "Sex Sounds",
         artist: "Lil Tjay",
         album: "True 2 Myself",
@@ -476,6 +520,7 @@
         audio: "Songs/Lil Tjay - Sex Sounds.mp3",
       },
       {
+        id: 57,
         title: "Angel Pt. 1",
         artist: "Muni Long, NLE Choppa, Kodak Black & Jimin of BTS JVKE",
         album: "Fast X Soundtrack",
@@ -484,6 +529,7 @@
         audio: "Songs/Lil Tjay - FN.mp3",
       },
       {
+        id: 58,
         title: "MoshPit",
         artist: "Kodak Black ft Juice WRLD",
         album: "Dying to Live",
@@ -492,6 +538,7 @@
         audio: "Songs/Lil Tjay - FN.mp3",
       },
       {
+        id: 60,
         title: "Never Fold",
         artist: "Fox Kid",
         album: "Single",
@@ -500,6 +547,7 @@
         audio: "Songs/fox kid  never fold  official audio.m4a",
       },
       {
+        id: 61,
         title: "No Return",
         artist: "Fox Kid",
         album: "Single",
@@ -508,6 +556,7 @@
         audio: "Songs/fox kid  no return .m4a",
       },
       {
+        id: 62,
         title: "Leaving",
         artist: "Fox Kid",
         album: "Single",
@@ -516,6 +565,7 @@
         audio: "Songs/- fox kid  leaving  audio  2025-02-22 10_29.m4a",
       },
       {
+        id: 63,
         title: "Extravagant",
         artist: "Nasty C ft Case Klowzed",
         album: "Single",
@@ -524,6 +574,7 @@
         audio: "Songs/Nasty C - Extravagant ft. Case-Klowzed.mp3",
       },
       {
+        id: 64,
         title: "Mad At You",
         artist: "King Von ft Dreezy",
         album: "Welcome to O'Block",
@@ -532,6 +583,7 @@
         audio: "Songs/King Von - Mad At You (Feat Dreezy).mp3"
       },
       {
+        id: 65,
         title: "The Code",
         artist: "King Von ft Polo G",
         album: "Welcome to O'Block",
@@ -540,6 +592,7 @@
         audio: "Songs/King Von - The Code (Feat Polo G).mp3"
       },
       {
+        id: 66,
         title: "Mine Too",
         artist: "King Von",
         album: "Welcome to O'Block",
@@ -548,6 +601,7 @@
         audio: "Songs/King Von - Mine Too.mp3",
       },
       {
+        id: 67,
         title: "I Am What I Am",
         artist: "King Von ft Fivio Foreign",
         album: "Welcome to O'Block",
@@ -556,6 +610,7 @@
         audio: "Songs/King Von - I Am What I Am (Feat Fivio Foreign).mp3",
       },
       {
+        id: 68,
         title: "Gleesh Place",
         artist: "King Von",
         album: "Welcome to O'Block",
@@ -564,6 +619,7 @@
         audio: "Songs/King Von - Gleesh Place.mp3",
       },
       {
+        id: 69,
         title: "Can't Relate",
         artist: "King Von",
         album: "Welcome to O'Block",
@@ -572,6 +628,7 @@
         audio: "Songs/King Von - Can't Relate.mp3",
       },
       {
+        id: 70,
         title: "Back Again",
         artist: "King Von ft Lil Durk & Prince Dre",
         album: "Welcome To O'Block",
@@ -580,6 +637,7 @@
         audio: "Songs/King Von - Back Again (Feat Lil Durk & Prince Dre).mp3",
       },
       {
+        id: 71,
         title: "All These Niggas",
         artist: "King Von ft Lil Durk",
         album: "Welcome To O'Block",
@@ -588,6 +646,7 @@
         audio: "Songs/King Von - All These Niggas (Feat Lil Durk).mp3",
       },
       {
+        id: 72,
         title: "Ain't See It Coming",
         artist: "King Von ft Moneybagg Yo",
         album: "Welcome To O'Block",
@@ -596,6 +655,7 @@
         audio: "Songs/King Von - Ain't See It Coming (Feat Moneybagg Yo).mp3",
       },
       {
+        id: 73,
         title: "Changes",
         artist: "XXXTentacion",
         album: "?",
@@ -604,6 +664,7 @@
         audio: "Songs/xxxtentacion - Changes(Lyrics).mp3"
       },
       {
+        id: 74,
         title: "Jocelyn Flores",
         artist: "XXXTentacion",
         album: "?",
@@ -612,6 +673,7 @@
         audio: "Songs/XXXTENTACION - Jocelyn Flores (lyrics).mp3"
       },
       {
+        id: 75,
         title: "Moonlight",
         artist: "XXXTentacion",
         album: "?",
@@ -620,6 +682,7 @@
         audio: "Songs/XXXTENTACION - Moonlight (Lyrics).mp3"
       },
       {
+        id: 76,
         title: "Everybody Dies In Their Nightmares",
         artist: "XXXTentacion",
         album: "17",
@@ -628,6 +691,7 @@
         audio: "Songs/XXXTENTACION - Everybody Dies In Their Nightmares (Lyrics).mp3"
       },
       {
+        id: 77,
         title: "Ex Bitch",
         artist: "XXXTentacion",
         album: "Bad Vibe's Forever",
@@ -636,6 +700,7 @@
         audio: "Songs/XXXTENTACION - Ex Bitch (Audio).mp3"
       },
       {
+        id: 78,
         title: "Fuck Love",
         artist: "XXXTentacion",
         album: "17",
@@ -644,6 +709,7 @@
         audio: "Songs/XXXTENTACION - Fck Love Lyrics (with Trippie Redd).mp3",
       },
       {
+        id: 79,
         title: "Hope",
         artist: "XXXTentacion",
         album: "?",
@@ -652,6 +718,7 @@
         audio: "Songs/XXXTENTACION - Hope Lyrics.mp3",
       },
       {
+        id: 80,
         title: "Look At Me!",
         artist: "XXXTentacion",
         album: "Revenge",
@@ -660,6 +727,7 @@
         audio: "Songs/XXXTENTACION - Look At Me (Audio).mp3",
       },
       {
+        id: 81,
         title: "Revenge",
         artist: "XXXTentacion",
         album: "17",
@@ -668,6 +736,7 @@
         audio: "Songs/XXXTENTACION - Revenge (Lyrics) Ive dug two graves for us my dear.mp3",
       },
       {
+        id: 82,
         title: "The Remedy for a Broken Heart (Why Am I So in Love)",
         artist: "XXXTentacion",
         album: "?",
@@ -676,6 +745,7 @@
         audio: "Songs/XXXTENTACION - the remedy for the broken heart (Lyrics).mp3"
       },
       {
+        id: 83,
         title: "Pretty Little Fears",
         artist: "6LACK, J Cole",
         album: "East Atlanta Love Letter",
@@ -684,6 +754,7 @@
         audio: "Songs/6LACK, J. Cole - Pretty Little Fears (Lyrics).mp3"
       },
       {
+        id: 84,
         title: "A Lot",
         artist: "21 Savage, J Cole",
         album: "i am > i was",
@@ -692,6 +763,7 @@
         audio: "Songs/21 Savage - a lot (Official Video) ft. J. Cole.mp3"
       },
       {
+        id: 85,
         title: "Bank Account",
         artist: "21 Savage",
         album: "ISSA",
@@ -700,6 +772,7 @@
         audio: "Songs/21 Savage - Bank Account (Lyrics).mp3"
       },
       {
+        id: 86,
         title: "Dangerous",
         artist: "21 Savage ft Lil Durk",
         album: "American Dream",
@@ -707,7 +780,8 @@
         cover: "https://th.bing.com/th/id/OIP.XCudU2JLCJk5_y_pSy3bKAHaHa?w=198&h=198&c=7&r=0&o=7&pid=1.7&rm=3",
         audio: "Songs/21 Savage - Dangerous (Lyrics) Feat. Lil Durk Metro Boomin.mp3"
       },
-       {
+      {
+        id: 87,
         title: "Knife Talk",
         artist: "Drake ft 21 Savage & Project Pat",
         album: "Certified Lover Boy",
@@ -715,7 +789,8 @@
         cover: "https://upload.wikimedia.org/wikipedia/en/thumb/7/79/Drake_-_Certified_Lover_Boy.png/250px-Drake_-_Certified_Lover_Boy.png",
         audio: "Songs/Drake ft 21-Savage Project Pat - Knife Talk.mp3"
       },
-       {
+      {
+        id: 89,
         title: "Gun Smoke",
         artist: "21 Savage",
         album: "i am > i was",
@@ -724,6 +799,7 @@
         audio: "Songs/21 Savage - Gun Smoke (Official Audio).mp3"
       },
       {
+        id: 90,
         title: "Redrum",
         artist: "21 Savage",
         album: "American Dream",
@@ -732,6 +808,7 @@
         audio: "Songs/21 Savage - redrum (Lyrics).mp3"
       }, 
       {
+        id: 91,
         title: "Call Me Revenge",
         artist: "21 Savage ft D4VD",
         album: "Call of Duty - Soundtrack",
@@ -740,6 +817,7 @@
         audio: "Songs/21 Savage, d4vd - Call Me Revenge (Call of Duty Modern Warfare 3 - Official Game Video).mp3",
       },
       {
+        id: 92,
         title: "Glock On My Lap",
         artist: "21 Savage ft Future",
         album: "Savage Mode II",
@@ -748,6 +826,7 @@
         audio: "Songs/21_savage_metro_boomin_glock_in_my_lap_official_music_video_mp3_47896.mp3",
       },
       {
+        id: 93,
         title: "X",
         artist: "21 Savage ft Future",
         album: "Savage Mode II",
@@ -756,6 +835,7 @@
         audio: "Songs/21_savage_metro_boomin_x_ft_future_official_music_video_mp3_26751.mp3",
       },
       {
+        id: 94,
         title: "Family Ties",
         artist: "Baby Keem ft Kendrick Lamar",
         album: "Melodic Blues",
@@ -764,6 +844,7 @@
         audio: "Songs/Baby Keem, Kendrick Lamar - family ties (Official Video).mp3",
       },
       {
+        id: 95,
         title: "Neé Nah",
         artist: "21 Savage ft Metro Boomin & Travis Scott",
         album: "American Dream",
@@ -772,6 +853,7 @@
         audio: "Songs/21-Savage-n-e-nah-Ft-Travis-Scott-Metro-Boomin-(HipHopKit.com).mp3",
       },
       {
+        id: 95,
         title: "Pop Ur Sh*t",
         artist: "21 Savage ft Metro Boomin & Young Thug",
         album: "American Dream",
@@ -780,6 +862,7 @@
         audio: "Songs/21-Savage-pop-ur-shit-Ft-Young-Thug-Metro-Boomin-(HipHopKit.com).mp3",
       },
       {
+        id: 96,
         title: "Prove It",
         artist: "21 Savage ft Summer Walker",
         album: "American Dream",
@@ -788,6 +871,7 @@
         audio: "Songs/21-Savage-prove-it-Ft-Summer-Walker-(HipHopKit.com).mp3",
       },
       {
+        id: 97,
         title: "Eastside",
         artist: "Benny Blanco ft Khalid & Halsey",
         album: "Friends Keep Secrets",
@@ -796,6 +880,7 @@
         audio: "Songs/benny blanco, Halsey Khalid Eastside (official video).mp3",
       },
       {
+        id: 98,
         title: "Uptown",
         artist: "Bex",
         album: "Uptown",
@@ -804,6 +889,7 @@
         audio: "Songs/Bex - Uptown (Lyric Video).mp3",
       },
       {
+        id: 99,
         title: "Bitch Don't Kill My Vibe",
         artist: "Kendrick Lamar ft Jay-Z",
         album: "good kid, m.A.A.d city (Deluxe)",
@@ -812,12 +898,103 @@
         audio: "Songs/Bitch Dont Kill My Vibe (Remix) ft. Jay Z - Kendrick Lamar (good kid m.A.A.d city Deluxe).mp3",
       },
       {
+        id: 100,
         title: "Blood",
         artist: "Kendrick Lamar",
         album: "DAMN",
         genre: "Conscious hip-hop",
         cover: "https://assets.fontsinuse.com/static/use-media-items/52/51196/full-1500x1500/58f577f9/C9H8-PWUIAAzbQ2-jpg-large-e.jpeg",
         audio: "Songs/BLOOD - Kendrick Lamar (DAMN).mp3",
+      },
+      {
+        id: 101,
+        title: "History",
+        artist: "Dave ft James Blake",
+        album: "The Boy Who Played The Harp",
+        genre: "Hip-Hop/Rap",
+        cover: "Songs/Dave - The Boy Who Played the Harp [E] - (SongsLover.com)/Cover.jpg",
+        audio: "Songs/Dave - The Boy Who Played the Harp [E] - (SongsLover.com)/01. History - (SongsLover.com).mp3",
+      },
+      {
+        id: 102,
+        title: "175 Months",
+        artist: "Dave",
+        album: "The Boy Who Played The Harp",
+        genre: "Hip-Hop/Rap",
+        cover: "Songs/Dave - The Boy Who Played the Harp [E] - (SongsLover.com)/Cover.jpg",
+        audio: "Songs/Dave - The Boy Who Played the Harp [E] - (SongsLover.com)/02. 175 Months - (SongsLover.com).mp3",
+      },
+      {
+        id: 103,
+        title: "No Weapons",
+        artist: "Dave ft Jim Legxacy",
+        album: "The Boy Who Played The Harp",
+        genre: "Hip-Hop/Rap",
+        cover: "Songs/Dave - The Boy Who Played the Harp [E] - (SongsLover.com)/Cover.jpg",
+        audio: "Songs/Dave - The Boy Who Played the Harp [E] - (SongsLover.com)/03. No Weapons - (SongsLover.com).mp3",
+      },
+      {
+        id: 104,
+        title: "Chapter 16",
+        artist: "Dave ft Kano",
+        album: "The Boy Who Played The Harp",
+        genre: "Hip-Hop/Rap",
+        cover: "Songs/Dave - The Boy Who Played the Harp [E] - (SongsLover.com)/Cover.jpg",
+        audio: "Songs/Dave - The Boy Who Played the Harp [E] - (SongsLover.com)/04. Chapter 16 - (SongsLover.com).mp3",
+      },
+      {
+        id: 105,
+        title: "Raindance",
+        artist: "Dave ft Tems",
+        album: "The Boy Who Played The Harp",
+        genre: "Hip-Hop/Rap",
+        cover: "Songs/Dave - The Boy Who Played the Harp [E] - (SongsLover.com)/Cover.jpg",
+        audio: "Songs/Dave - The Boy Who Played the Harp [E] - (SongsLover.com)/05. Raindance - (SongsLover.com).mp3",
+      },
+      {
+        id: 106,
+        title: "Selfish",
+        artist: "Dave ft James Blake",
+        album: "The Boy Who Played The Harp",
+        genre: "Hip-Hop/Rap",
+        cover: "Songs/Dave - The Boy Who Played the Harp [E] - (SongsLover.com)/Cover.jpg",
+        audio: "Songs/Dave - The Boy Who Played the Harp [E] - (SongsLover.com)/06. Selfish - (SongsLover.com).mp3",
+      },
+      {
+        id: 107,
+        title: "My 27th Birthday",
+        artist: "Dave",
+        album: "The Boy Who Played The Harp",
+        genre: "Hip-Hop/Rap",
+        cover: "Songs/Dave - The Boy Who Played the Harp [E] - (SongsLover.com)/Cover.jpg",
+        audio: "Songs/Dave - The Boy Who Played the Harp [E] - (SongsLover.com)/07. My 27th Birthday - (SongsLover.com).mp3",
+      },
+      {
+        id: 108,
+        title: "Marvellous",
+        artist: "Dave",
+        album: "The Boy Who Played The Harp",
+        genre: "Hip-Hop/Rap",
+        cover: "Songs/Dave - The Boy Who Played the Harp [E] - (SongsLover.com)/Cover.jpg",
+        audio: "Songs/Dave - The Boy Who Played the Harp [E] - (SongsLover.com)/08. Marvellous - (SongsLover.com).mp3",
+      },
+      {
+        id: 109,
+        title: "Fairchild",
+        artist: "Dave ft Nicole Blakk",
+        album: "The Boy Who Played The Harp",
+        genre: "Hip-Hop/Rap",
+        cover: "Songs/Dave - The Boy Who Played the Harp [E] - (SongsLover.com)/Cover.jpg",
+        audio: "Songs/Dave - The Boy Who Played the Harp [E] - (SongsLover.com)/09. Fairchild - (SongsLover.com).mp3",
+      },
+      {
+        id: 110,
+        title: "The Boy Who Played the Harp",
+        artist: "Dave",
+        album: "The Boy Who Played The Harp",
+        genre: "Hip-Hop/Rap",
+        cover: "Songs/Dave - The Boy Who Played the Harp [E] - (SongsLover.com)/Cover.jpg",
+        audio: "Songs/Dave - The Boy Who Played the Harp [E] - (SongsLover.com)/10. The Boy Who Played the Harp - (SongsLover.com).mp3",
       },
       {
         title: "If I'm Lying",
@@ -1688,4 +1865,23 @@
         audio: "Songs/Kendrick Lamar - 616 in LA (Drake Diss).mp3",
       },
     ];
+    let idCounter = 1;
+songs.forEach(song => {
+  if (!song.id) {
+    song.id = idCounter++;
+  }
+});
 
+// Remove duplicates based on ID
+const uniqueSongs = [];
+const seenIds = new Set();
+
+songs.forEach(song => {
+  if (!seenIds.has(song.id)) {
+    seenIds.add(song.id);
+    uniqueSongs.push(song);
+  }
+});
+
+// Export the cleaned songs array
+window.songs = uniqueSongs;
