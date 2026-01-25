@@ -18,8 +18,6 @@ It lets you play, pause, skip, and seek songs directly from your browser. 🎶
 
 🌐 [Try on GitHub Pages](https://Gabriel-Banda.github.io/Musiv/)
 
-🌐 [Try on Cloudflare Pages](http://musiv.pages.dev/)
-
 
 ## V.1.1.2
 <img src="Assets/Images/Musiv.png" src="Version Update">
