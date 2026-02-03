@@ -5,6 +5,17 @@
   <title>Musiv - Premium Music Streaming</title>
   <meta name="description" content="Stream your favorite music with Musiv - High quality audio streaming service">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Open Graph / Twitter -->
+  <meta property="og:title" content="Musiv - Premium Music Streaming">
+  <meta property="og:description" content="Stream your favorite music with Musiv - High quality audio streaming service">
+  <meta property="og:image" content="Assets/Images/Musiv.png">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://musiv.app">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Musiv - Premium Music Streaming">
+  <meta name="twitter:description" content="Stream your favorite music with Musiv - High quality audio streaming service">
+  <meta name="twitter:image" content="Assets/Images/Musiv.png">
   
   <!-- Favicon Fixes - Multiple formats and sizes -->
   <link rel="icon" href="Assets/Images/favicon.ico" type="image/x-icon">
@@ -26,6 +37,9 @@
   <!-- CSS -->
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   
   <!-- PWA Meta Tags -->
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -317,8 +331,13 @@
       <span class="progress-time" id="player-current">0:00</span>
       <div class="progress-bar" id="progress-bar">
         <div class="progress-bar-inner" id="progress-inner"></div>
+        <div class="progress-thumb" id="progress-thumb" aria-hidden="true"></div>
+        <div class="progress-tooltip" id="progress-tooltip" aria-hidden="true">0:00 / 0:00</div>
       </div>
       <span class="progress-time" id="player-duration">0:00</span>
+    </div>
+    <div class="player-visualizer" aria-hidden="true">
+      <canvas id="audio-visualizer" width="140" height="32"></canvas>
     </div>
     <div class="player-volume">
       <span>
