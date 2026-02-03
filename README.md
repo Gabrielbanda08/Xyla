@@ -1,7 +1,12 @@
 # Musiv
+![License](https://img.shields.io/badge/License-MIT-green.svg)
+![Status](https://img.shields.io/badge/Status-Active-success)
+![Made With](https://img.shields.io/badge/Made%20with-HTML%2C%20CSS%2C%20JS-blue)
+![Open Source](https://img.shields.io/badge/Open%20Source-Yes-brightgreen)
+![Contributions](https://img.shields.io/badge/Contributions-Welcome-orange)
 
-<img src="Assets/Images/Musiv Logo 2.png">
-Let the Music Flow with the Musiv🌊
+
+Let the Music Flow with Musiv
 
 Musiv is a lightweight web-based music player built with **HTML, CSS, and JavaScript**.  
 It lets you play, pause, skip, and seek songs directly from your browser. 🎶  
@@ -18,14 +23,4 @@ It lets you play, pause, skip, and seek songs directly from your browser. 🎶
 
 🌐 [Try on GitHub Pages](https://Gabriel-Banda.github.io/Musiv/)
 
-
-## V.1.1.2
-<img src="Assets/Images/Musiv.png" src="Version Update">
-
-## Screenshot
-
-<img src="Assets/Images/screenshot.png" src="screenshot.png">
-
-## Screenshot 2
-
-<img src="Assets/Images/screenshot 2.png" src="screenshot2.png">
+🌐 [Try on Cloudflre Pages](https://musiv.pages.dev/)
