@@ -4,6 +4,7 @@ let isPlaying = false;
 let isShuffled = false;
 let repeatMode = 1; // 0: off, 1: all, 2: one
 let currentVolume = 0.8;
+let previousVolume = currentVolume;
 let currentSongsList = songs; // Track current displayed songs for filtering
 let isDragging = false; // Track if user is dragging progress bar
 let errorCount = 0; // Track consecutive errors to prevent infinite loops
@@ -14,6 +15,10 @@ let currentMode = 'audio'; // 'audio' or 'video' - tracks current playback mode
 let audioContextInitialized = false; // Track if audio context is initialized
 let audioBuffer = null; // For Web Audio API
 let audioSource = null; // For Web Audio API
+let analyserNode = null; // For visualizer
+let sourceNode = null; // Media element source
+let visualizerAnimationId = null;
+let currentThemeImage = null;
 
 // Audio context for background playback
 let audioContext = null;
@@ -53,6 +58,10 @@ const progressInner = document.getElementById('progress-inner');
 const playerCurrent = document.getElementById('player-current');
 const playerDuration = document.getElementById('player-duration');
 const volumeRange = document.getElementById('volume-range');
+const progressThumb = document.getElementById('progress-thumb');
+const progressTooltip = document.getElementById('progress-tooltip');
+const visualizerCanvas = document.getElementById('audio-visualizer');
+const visualizerContext = visualizerCanvas ? visualizerCanvas.getContext('2d') : null;
 
 // YouTube Elements
 const youtubePanel = document.getElementById('youtube-panel');
@@ -78,11 +87,14 @@ function initAudioContext() {
     const AudioContext = window.AudioContext || window.webkitAudioContext;
     audioContext = new AudioContext();
     gainNode = audioContext.createGain();
-    gainNode.connect(audioContext.destination);
+    analyserNode = audioContext.createAnalyser();
+    analyserNode.fftSize = 256;
     
     // Create media element source
-    const source = audioContext.createMediaElementSource(audio);
-    source.connect(gainNode);
+    sourceNode = audioContext.createMediaElementSource(audio);
+    sourceNode.connect(analyserNode);
+    analyserNode.connect(gainNode);
+    gainNode.connect(audioContext.destination);
     
     audioContextInitialized = true;
     console.log('Audio Context initialized');
@@ -157,6 +169,124 @@ function updateBackgroundCover(imageUrl) {
   };
   
   img.src = imageUrl;
+}
+
+// Dynamic Theming based on album art
+function getDominantColor(imageUrl) {
+  return new Promise((resolve, reject) => {
+    if (!imageUrl) {
+      reject(new Error('No image provided'));
+      return;
+    }
+
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+    img.onload = () => {
+      try {
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d', { willReadFrequently: true });
+        const width = 50;
+        const height = 50;
+        canvas.width = width;
+        canvas.height = height;
+        ctx.drawImage(img, 0, 0, width, height);
+        const imageData = ctx.getImageData(0, 0, width, height).data;
+        let r = 0, g = 0, b = 0, count = 0;
+        for (let i = 0; i < imageData.length; i += 4) {
+          const alpha = imageData[i + 3];
+          if (alpha < 200) continue;
+          r += imageData[i];
+          g += imageData[i + 1];
+          b += imageData[i + 2];
+          count++;
+        }
+        if (!count) {
+          reject(new Error('No pixels sampled'));
+          return;
+        }
+        resolve([
+          Math.round(r / count),
+          Math.round(g / count),
+          Math.round(b / count)
+        ]);
+      } catch (error) {
+        reject(error);
+      }
+    };
+    img.onerror = () => reject(new Error('Image failed to load'));
+    img.src = imageUrl;
+  });
+}
+
+function applyDynamicTheme(imageUrl) {
+  if (!imageUrl || currentThemeImage === imageUrl) return;
+  currentThemeImage = imageUrl;
+
+  getDominantColor(imageUrl)
+    .then(([r, g, b]) => {
+      const gradientStart = `rgba(${r}, ${g}, ${b}, 0.45)`;
+      const gradientEnd = `rgba(${Math.max(r - 20, 0)}, ${Math.max(g - 20, 0)}, ${Math.max(b - 20, 0)}, 0.9)`;
+      const accent = `rgb(${r}, ${g}, ${b})`;
+      const accentSoft = `rgba(${r}, ${g}, ${b}, 0.4)`;
+      const accentLight = `rgb(${Math.min(r + 40, 255)}, ${Math.min(g + 40, 255)}, ${Math.min(b + 40, 255)})`;
+
+      document.documentElement.style.setProperty('--dynamic-gradient-start', gradientStart);
+      document.documentElement.style.setProperty('--dynamic-gradient-end', gradientEnd);
+      document.documentElement.style.setProperty('--dynamic-accent', accent);
+      document.documentElement.style.setProperty('--dynamic-accent-soft', accentSoft);
+      document.documentElement.style.setProperty('--primary-color', accent);
+      document.documentElement.style.setProperty('--primary-light', accentLight);
+
+      const themeMeta = document.querySelector('meta[name="theme-color"]');
+      if (themeMeta) {
+        themeMeta.setAttribute('content', accent);
+      }
+    })
+    .catch(() => {
+      document.documentElement.style.setProperty('--dynamic-gradient-start', 'rgba(15, 20, 25, 0.95)');
+      document.documentElement.style.setProperty('--dynamic-gradient-end', 'rgba(26, 32, 44, 0.95)');
+      document.documentElement.style.setProperty('--primary-color', '#1587c9');
+      document.documentElement.style.setProperty('--primary-light', '#8c9eff');
+    });
+}
+
+// Audio visualizer
+function startVisualizer() {
+  if (!visualizerCanvas || !visualizerContext || !analyserNode) return;
+  cancelAnimationFrame(visualizerAnimationId);
+  const bufferLength = analyserNode.frequencyBinCount;
+  const dataArray = new Uint8Array(bufferLength);
+
+  const draw = () => {
+    visualizerAnimationId = requestAnimationFrame(draw);
+    analyserNode.getByteFrequencyData(dataArray);
+    visualizerContext.clearRect(0, 0, visualizerCanvas.width, visualizerCanvas.height);
+
+    const barWidth = (visualizerCanvas.width / bufferLength) * 2.2;
+    let x = 0;
+    const accent = getComputedStyle(document.documentElement).getPropertyValue('--dynamic-accent') || '#1587c9';
+
+    for (let i = 0; i < bufferLength; i++) {
+      const barHeight = (dataArray[i] / 255) * visualizerCanvas.height;
+      visualizerContext.fillStyle = accent.trim();
+      visualizerContext.fillRect(x, visualizerCanvas.height - barHeight, barWidth, barHeight);
+      x += barWidth + 1;
+    }
+  };
+
+  draw();
+  audioPlayerBar.classList.add('visualizer-active');
+}
+
+function stopVisualizer() {
+  audioPlayerBar.classList.remove('visualizer-active');
+  if (visualizerAnimationId) {
+    cancelAnimationFrame(visualizerAnimationId);
+    visualizerAnimationId = null;
+  }
+  if (visualizerContext && visualizerCanvas) {
+    visualizerContext.clearRect(0, 0, visualizerCanvas.width, visualizerCanvas.height);
+  }
 }
 
 // Show Error Message
@@ -355,12 +485,13 @@ function loadYouTubeVideo(song) {
   }
   
   try {
-    currentMode = 'video';
     if (isPlaying && currentMode === 'audio') {
       audio.pause();
       isPlaying = false;
       btnPlayPause.textContent = '▶';
     }
+    currentMode = 'video';
+    stopVisualizer();
     
     youtubePlayer.loadVideoById(song.youtubeId);
     videoSongTitle.textContent = song.title;
@@ -404,6 +535,92 @@ function debounce(func, wait) {
     clearTimeout(timeout);
     timeout = setTimeout(later, wait);
   };
+}
+
+function isTypingTarget(target) {
+  if (!target) return false;
+  const tagName = target.tagName ? target.tagName.toLowerCase() : '';
+  return tagName === 'input' || tagName === 'textarea' || target.isContentEditable;
+}
+
+function updateVolume(newVolume) {
+  const clamped = Math.min(1, Math.max(0, newVolume));
+  audio.volume = clamped;
+  currentVolume = clamped;
+  if (volumeRange) {
+    volumeRange.value = clamped;
+  }
+  if (gainNode) {
+    gainNode.gain.value = clamped;
+  }
+}
+
+function handleKeyboardShortcuts(event) {
+  if (isTypingTarget(event.target)) return;
+
+  const key = event.key.toLowerCase();
+  if (event.code === 'Space') {
+    event.preventDefault();
+    togglePlayPause();
+    return;
+  }
+
+  if (key === 'm') {
+    event.preventDefault();
+    if (audio.muted || currentVolume === 0) {
+      audio.muted = false;
+      updateVolume(previousVolume || 0.8);
+      showNotification('Unmuted', 'info');
+    } else {
+      previousVolume = currentVolume;
+      audio.muted = true;
+      updateVolume(0);
+      showNotification('Muted', 'info');
+    }
+    return;
+  }
+
+  if (key === 'arrowup') {
+    event.preventDefault();
+    updateVolume(currentVolume + 0.05);
+    return;
+  }
+
+  if (key === 'arrowdown') {
+    event.preventDefault();
+    updateVolume(currentVolume - 0.05);
+    return;
+  }
+
+  if (key === 'arrowleft') {
+    event.preventDefault();
+    if (audio.duration) {
+      audio.currentTime = Math.max(audio.currentTime - 5, 0);
+    }
+    return;
+  }
+
+  if (key === 'arrowright') {
+    event.preventDefault();
+    if (audio.duration) {
+      audio.currentTime = Math.min(audio.currentTime + 5, audio.duration);
+    }
+    return;
+  }
+
+  if (key === 'l') {
+    event.preventDefault();
+    if (audio.duration) {
+      audio.currentTime = Math.min(audio.currentTime + 10, audio.duration);
+    }
+  }
+
+  if (key === 'j') {
+    event.preventDefault();
+    if (audio.duration) {
+      audio.currentTime = Math.max(audio.currentTime - 10, 0);
+    }
+  }
 }
 
 // Initialize App
@@ -570,6 +787,9 @@ function setupEventListeners() {
   }, 300);
   
   searchInput.addEventListener('input', debouncedFilter);
+
+  // Keyboard shortcuts
+  document.addEventListener('keydown', handleKeyboardShortcuts);
   
   // YouTube video
   btnVideo.addEventListener('click', function() {
@@ -659,6 +879,9 @@ function initAudioPlayer() {
   
   // Progress bar - Click and Drag functionality
   progressBar.addEventListener('click', seekAudio);
+  progressBar.addEventListener('mousemove', updateProgressHover);
+  progressBar.addEventListener('mouseenter', updateProgressHover);
+  progressBar.addEventListener('mouseleave', clearProgressHover);
   
   // Mouse events for dragging
   progressBar.addEventListener('mousedown', startDrag);
@@ -672,10 +895,10 @@ function initAudioPlayer() {
   
   // Volume control
   volumeRange.addEventListener('input', function() {
-    audio.volume = this.value;
-    currentVolume = this.value;
-    if (gainNode) {
-      gainNode.gain.value = this.value;
+    updateVolume(parseFloat(this.value));
+    audio.muted = currentVolume === 0;
+    if (currentVolume > 0) {
+      previousVolume = currentVolume;
     }
   });
   
@@ -689,6 +912,9 @@ function initAudioPlayer() {
     if (audio.duration && !isDragging && currentMode === 'audio') {
       const progressPercent = (audio.currentTime / audio.duration) * 100;
       progressInner.style.width = progressPercent + '%';
+      if (progressThumb) {
+        progressThumb.style.left = `${progressPercent}%`;
+      }
       playerCurrent.textContent = formatTime(audio.currentTime);
       updateMediaSessionPositionState();
     }
@@ -698,6 +924,7 @@ function initAudioPlayer() {
     if (currentMode !== 'audio') return;
     
     errorCount = 0;
+    stopVisualizer();
     
     if (repeatMode === 2) {
       audio.currentTime = 0;
@@ -716,12 +943,14 @@ function initAudioPlayer() {
   audio.addEventListener('play', function() {
     if (currentMode === 'audio') {
       updateMediaSessionPlaybackState();
+      startVisualizer();
     }
   });
 
   audio.addEventListener('pause', function() {
     if (currentMode === 'audio') {
       updateMediaSessionPlaybackState();
+      stopVisualizer();
     }
   });
 
@@ -734,6 +963,7 @@ function initAudioPlayer() {
     
     if (errorCount >= MAX_ERRORS) {
       showError('Unable to play audio. Please try another song.');
+      showNotification('Unable to play audio. Please try another song.', 'error');
       isPlaying = false;
       btnPlayPause.textContent = '▶';
       return;
@@ -741,6 +971,7 @@ function initAudioPlayer() {
     
     const currentSong = currentSongsList[currentSongIndex];
     showError(`Error playing "${currentSong.title}". Trying next song...`);
+    showNotification(`Error playing "${currentSong.title}". Trying next song...`, 'error');
     
     // Try to play next song with delay
     setTimeout(() => {
@@ -794,9 +1025,32 @@ function seekAudio(e) {
   
   const progressPercent = (newTime / audio.duration) * 100;
   progressInner.style.width = progressPercent + '%';
+  if (progressThumb) {
+    progressThumb.style.left = `${progressPercent}%`;
+  }
   playerCurrent.textContent = formatTime(newTime);
   
   updateMediaSessionPositionState();
+}
+
+function updateProgressHover(e) {
+  if (!audio.duration || !progressTooltip || !progressThumb) return;
+  const rect = progressBar.getBoundingClientRect();
+  const clientX = e.type.includes('touch') ? e.touches[0].clientX : e.clientX;
+  const percent = Math.max(0, Math.min((clientX - rect.left) / rect.width, 1));
+  const hoverTime = percent * audio.duration;
+  const percentValue = percent * 100;
+
+  progressThumb.style.left = `${percentValue}%`;
+  progressTooltip.style.left = `${percentValue}%`;
+  progressTooltip.textContent = `${formatTime(hoverTime)} / ${formatTime(audio.duration)}`;
+}
+
+function clearProgressHover() {
+  if (!audio.duration || !progressThumb || !progressTooltip) return;
+  const progressPercent = (audio.currentTime / audio.duration) * 100;
+  progressThumb.style.left = `${progressPercent}%`;
+  progressTooltip.style.left = `${progressPercent}%`;
 }
 
 // Initialize Media Session API with enhanced mobile support
@@ -946,9 +1200,36 @@ function loadImageWithFallback(imgElement, src, fallbackSrc = 'https://via.place
   img.src = src;
 }
 
+// Skeleton placeholders
+function renderSkeletonCards(count = 6) {
+  return `
+    <div class="skeleton-grid">
+      ${Array.from({ length: count }).map(() => `
+        <div class="skeleton-card">
+          <div class="skeleton-cover"></div>
+          <div class="skeleton-info">
+            <div class="skeleton-line medium"></div>
+            <div class="skeleton-line short"></div>
+            <div class="skeleton-line"></div>
+          </div>
+        </div>
+      `).join('')}
+    </div>
+  `;
+}
+
 // Load Section Content
 function loadSection(section) {
   let content = '';
+  const skeletonCount = section === 'playlists' ? 3 : 6;
+
+  sectionArea.innerHTML = `
+    <div class="section-header">
+      <h1 class="section-title">Loading</h1>
+      <p class="section-subtitle">Fetching your music...</p>
+    </div>
+    ${renderSkeletonCards(skeletonCount)}
+  `;
   
   switch(section) {
     case 'home':
@@ -1086,18 +1367,18 @@ function loadSection(section) {
       currentSongsList = songs;
   }
   
-  sectionArea.innerHTML = content;
-  
   setTimeout(() => {
+    sectionArea.innerHTML = content;
+
     const musicCards = document.querySelectorAll('.music-card');
     musicCards.forEach((card, index) => {
       card.addEventListener('click', function() {
         playSong(index, currentSongsList);
       });
     });
-    
+
     lazyLoadImages();
-  }, 0);
+  }, 300);
 }
 
 // Enhanced Render Music Cards with favorite and playlist buttons
@@ -1288,6 +1569,7 @@ function playSong(index, songsArray = songs) {
     
     // Update blurred background
     updateBackgroundCover(song.cover);
+    applyDynamicTheme(song.cover);
     
     // Set audio source with error handling
     audio.src = song.audio;
@@ -1315,8 +1597,10 @@ function playSong(index, songsArray = songs) {
         if (error.name === 'NotAllowedError') {
           showError('Click anywhere on the page to enable audio playback');
           document.getElementById('audio-context-notice').style.display = 'block';
+          showNotification('Click to enable audio playback', 'error');
         } else {
           showError('Error playing audio. Please try another song.');
+          showNotification('Error playing audio. Please try another song.', 'error');
         }
         
         isPlaying = false;
