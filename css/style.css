@@ -21,6 +21,10 @@
   --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.2);
   --glass-bg: rgba(255, 255, 255, 0.05);
   --glass-border: rgba(255, 255, 255, 0.1);
+  --dynamic-gradient-start: rgba(15, 20, 25, 0.95);
+  --dynamic-gradient-end: rgba(26, 32, 44, 0.95);
+  --dynamic-accent: #1587c9;
+  --dynamic-accent-soft: rgba(21, 135, 201, 0.4);
 }
 
 /* Blurred Background */
@@ -102,11 +106,12 @@
 body {
   font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
     Oxygen, Ubuntu, sans-serif;
-  background: linear-gradient(135deg, var(--background-dark) 0%, #1a202c 100%);
+  background: linear-gradient(135deg, var(--dynamic-gradient-start) 0%, var(--dynamic-gradient-end) 100%);
   color: var(--text-primary);
   line-height: 1.6;
   overflow-x: hidden;
   min-height: 100vh;
+  transition: background 0.8s ease;
 }
 
 /* Enhanced Loading Screen */
@@ -513,7 +518,7 @@ body {
 
 .music-card-title {
   font-size: 1rem;
-  font-weight: 600;
+  font-weight: 700;
   margin-bottom: 0.25rem;
   white-space: nowrap;
   overflow: hidden;
@@ -523,6 +528,7 @@ body {
 .music-card-artist {
   color: var(--text-secondary);
   font-size: 0.875rem;
+  opacity: 0.85;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -540,6 +546,7 @@ body {
   padding: 0 1rem 1rem;
   position: relative;
   z-index: 2;
+  transition: var(--transition);
 }
 
 .music-card-btn {
@@ -555,6 +562,10 @@ body {
   align-items: center;
   gap: 0.5rem;
   backdrop-filter: blur(10px);
+}
+
+.music-card:hover .music-card-actions {
+  transform: translateY(-2px);
 }
 
 .music-card-btn:hover {
@@ -621,7 +632,7 @@ body {
 
 .player-title {
   font-size: 0.95rem;
-  font-weight: 600;
+  font-weight: 700;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -629,7 +640,7 @@ body {
 
 .player-artist {
   font-size: 0.875rem;
-  color: var(--text-secondary);
+  color: var(--text-muted);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -674,6 +685,10 @@ body {
   box-shadow: 0 6px 16px rgba(21, 135, 201, 0.4);
 }
 
+.player-btn.primary:active {
+  transform: scale(0.98);
+}
+
 .player-progress {
   flex: 1;
   display: flex;
@@ -690,6 +705,7 @@ body {
   cursor: pointer;
   position: relative;
   overflow: hidden;
+  transition: height 0.2s ease;
 }
 
 .progress-bar-inner {
@@ -703,6 +719,44 @@ body {
   transition: width 0.1s linear;
 }
 
+.progress-thumb {
+  position: absolute;
+  top: 50%;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--primary-light);
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.progress-tooltip {
+  position: absolute;
+  top: -32px;
+  padding: 4px 8px;
+  border-radius: 8px;
+  font-size: 0.7rem;
+  background: rgba(15, 20, 25, 0.9);
+  color: var(--text-primary);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  transform: translate(-50%, -6px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  white-space: nowrap;
+}
+
+.progress-bar:hover {
+  height: 6px;
+}
+
+.progress-bar:hover .progress-thumb,
+.progress-bar:hover .progress-tooltip {
+  opacity: 1;
+}
+
 .progress-time {
   font-size: 0.75rem;
   color: var(--text-muted);
@@ -713,6 +767,24 @@ body {
   display: flex;
   align-items: center;
   gap: 0.5rem;
+}
+
+.player-visualizer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-left: 1rem;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+#audio-player-bar.visualizer-active .player-visualizer {
+  opacity: 1;
+}
+
+#audio-visualizer {
+  width: 140px;
+  height: 32px;
 }
 
 .volume-slider {
@@ -1055,6 +1127,69 @@ body {
 
 .notification.info {
   border-left: 4px solid var(--primary-color);
+}
+
+/* Skeleton Loading */
+.skeleton-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1.5rem;
+}
+
+.skeleton-card {
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  position: relative;
+  box-shadow: var(--shadow-sm);
+}
+
+.skeleton-cover {
+  width: 100%;
+  padding-bottom: 100%;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.skeleton-info {
+  padding: 1rem;
+}
+
+.skeleton-line {
+  height: 10px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 6px;
+  margin-bottom: 0.6rem;
+  overflow: hidden;
+  position: relative;
+}
+
+.skeleton-line.short {
+  width: 60%;
+}
+
+.skeleton-line.medium {
+  width: 80%;
+}
+
+.skeleton-card::after,
+.skeleton-line::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
+  animation: shimmer 1.4s infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    left: -100%;
+  }
+  100% {
+    left: 100%;
+  }
 }
 
 /* Enhanced Playlist Cards */

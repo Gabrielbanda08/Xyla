@@ -6,7 +6,10 @@ const urlsToCache = [
   '/css/style.css',
   '/js/main.js',
   '/js/songs.js',
+  '/manifest.json',
   '/Assets/Images/Musiv.png',
+  '/Assets/Images/favicon-32x32.png',
+  '/Assets/Images/favicon-192x192.png',
   'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css'
 ];
 
