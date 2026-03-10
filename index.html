@@ -2,744 +2,326 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Musiv - Premium Music Streaming</title>
-  <meta name="description" content="Stream your favorite music with Musiv - High quality audio streaming service">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <!-- Open Graph / Twitter -->
-  <meta property="og:title" content="Musiv - Premium Music Streaming">
-  <meta property="og:description" content="Stream your favorite music with Musiv - High quality audio streaming service">
+  <title>Musiv — Premium Music Streaming</title>
+  <meta name="description" content="Stream your favorite music with Musiv — High quality audio streaming">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta property="og:title" content="Musiv — Premium Music Streaming">
+  <meta property="og:description" content="Stream your favorite music with Musiv">
   <meta property="og:image" content="Assets/Images/Musiv.png">
   <meta property="og:type" content="website">
-  <meta property="og:url" content="https://musiv.app">
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Musiv - Premium Music Streaming">
-  <meta name="twitter:description" content="Stream your favorite music with Musiv - High quality audio streaming service">
-  <meta name="twitter:image" content="Assets/Images/Musiv.png">
-  
-  <!-- Favicon Fixes - Multiple formats and sizes -->
-  <link rel="icon" href="Assets/Images/favicon.ico" type="image/x-icon">
-  <link rel="icon" href="Assets/Images/favicon-16x16.png" type="image/png" sizes="16x16">
-  <link rel="icon" href="Assets/Images/favicon-32x32.png" type="image/png" sizes="32x32">
-  <link rel="icon" href="Assets/Images/favicon-96x96.png" type="image/png" sizes="96x96">
-  <link rel="icon" href="Assets/Images/favicon-192x192.png" type="image/png" sizes="192x192">
-  <link rel="apple-touch-icon" sizes="180x180" href="Assets/Images/apple-touch-icon.png">
-  <link rel="shortcut icon" href="Assets/Images/favicon.ico">
-  <meta name="msapplication-TileColor" content="#1587c9">
-  <meta name="msapplication-TileImage" content="Assets/Images/mstile-144x144.png">
-  <meta name="theme-color" content="#1587c9">
-  
-  <!-- Preload critical assets -->
-  <link rel="preload" href="Assets/Images/favicon.ico" as="image" type="image/x-icon">
-  <link rel="preload" href="css/style.css" as="style">
-  <link rel="preload" href="js/main.js" as="script">
-  
-  <!-- CSS -->
-  <link rel="stylesheet" href="css/style.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  
-  <!-- PWA Meta Tags -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎵</text></svg>">
+  <link rel="apple-touch-icon" href="Assets/Images/Musiv.png">
+  <meta name="theme-color" content="#0d1117">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <link rel="manifest" href="manifest.json">
-  
-  <style>
-    /* Additional CSS for the sidebar header image */
-    .sidebar-header {
-      display: flex;
-      justify-content: left;
-      align-items: left;
-      padding: 1rem;
-    }
-    
-    .sidebar-header img {
-      max-width: 100%;
-      max-height: 100px;
-      object-fit: contain;
-    }
-    
-    /* Audio context notification */
-    .audio-context-notice {
-      position: fixed;
-      bottom: 100px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: linear-gradient(135deg, #1587c9, #5a67d8);
-      color: white;
-      padding: 12px 24px;
-      border-radius: 25px;
-      font-size: 14px;
-      font-weight: 500;
-      z-index: 10000;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      box-shadow: 0 8px 32px rgba(21, 135, 201, 0.4);
-      animation: pulse 2s infinite;
-      backdrop-filter: blur(10px);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      transition: opacity 0.3s ease;
-      display: none;
-    }
-
-    .audio-context-notice i {
-      font-size: 16px;
-    }
-
-    @keyframes pulse {
-      0% {
-        transform: translateX(-50%) scale(1);
-      }
-      50% {
-        transform: translateX(-50%) scale(1.05);
-      }
-      100% {
-        transform: translateX(-50%) scale(1);
-      }
-    }
-
-    /* Audio loading state */
-    .audio-loading {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.7);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 9999;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.3s ease;
-    }
-
-    .audio-loading.active {
-      opacity: 1;
-      pointer-events: all;
-    }
-
-    .audio-loading-spinner {
-      width: 50px;
-      height: 50px;
-      border: 3px solid rgba(255, 255, 255, 0.1);
-      border-radius: 50%;
-      border-top-color: var(--primary-color);
-      animation: spin 1s linear infinite;
-    }
-
-    @keyframes spin {
-      to {
-        transform: rotate(360deg);
-      }
-    }
-
-    /* Quick fix for iOS Safari */
-    @supports (-webkit-touch-callout: none) {
-      #audio-player-bar {
-        padding-bottom: env(safe-area-inset-bottom);
-      }
-    }
-
-    /* Better scrollbar */
-    ::-webkit-scrollbar {
-      width: 8px;
-    }
-
-    ::-webkit-scrollbar-track {
-      background: rgba(255, 255, 255, 0.05);
-    }
-
-    ::-webkit-scrollbar-thumb {
-      background: var(--primary-color);
-      border-radius: 4px;
-    }
-
-    ::-webkit-scrollbar-thumb:hover {
-      background: var(--primary-light);
-    }
-    
-    /* Favicon loading fallback */
-    .favicon-fallback {
-      display: none;
-    }
-  </style>
-  
-  <!-- Inline base64 favicon as fallback -->
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎵</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous">
+  <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-  <!-- Audio loading overlay -->
-  <div id="audio-loading" class="audio-loading">
-    <div class="audio-loading-spinner"></div>
-  </div>
-  
-  <!-- Audio context notice -->
-  <div id="audio-context-notice" class="audio-context-notice">
-    <i class="fas fa-music"></i> Click anywhere to enable audio
-  </div>
-  
-  <!-- Blurred Background -->
-  <div id="background-cover"></div>
-  
-  <!-- Loading Screen -->
-  <div id="loading-screen">
-    <div class="logo">Musiv</div>
-    <div class="wave-progress-container">
-      <div class="wave-progress-bar">
-        <div class="wave-progress-fill"></div>
-        <div class="wave-shape"></div>
-      </div>
+  <div class="grain" aria-hidden="true"></div>
+  <div id="background-cover" aria-hidden="true"></div>
+
+  <div id="loading-screen" role="status">
+    <div class="ls-inner">
+      <div class="ls-logo"><span class="ls-logo-m">M</span><span>usiv</span></div>
+      <div class="ls-bar-track"><div class="ls-bar-fill"></div></div>
+      <p class="ls-sub">Loading your library…</p>
     </div>
   </div>
 
-  <!-- Notification Container -->
-  <div id="notification-container"></div>
+  <div id="notification-container" aria-live="polite"></div>
 
-  <!-- App Container -->
   <div class="app-container">
     <!-- Sidebar -->
-    <nav id="sidebar">
-      <div>
-        <div class="sidebar-header">
-          <img src="Assets/Images/Musiv.png" alt="Musiv Logo" loading="eager">
+    <nav id="sidebar" aria-label="Main navigation">
+      <div class="sidebar-inner">
+        <div class="sidebar-brand">
+          <img src="Assets/Images/Musiv.png" alt="Musiv" class="sidebar-brand-img"
+               onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+          <span class="sidebar-brand-txt" style="display:none">Musiv</span>
         </div>
+
+        <div class="sidebar-section-label">Discover</div>
         <ul class="sidebar-nav">
-          <li><a class="sidebar-link active" data-section="home">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
-            </svg>
+          <li><a class="sidebar-link active" data-section="home" href="#">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
             <span>Home</span>
           </a></li>
-          <li><a class="sidebar-link" data-section="search">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
-            </svg>
+          <li><a class="sidebar-link" data-section="search" href="#">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
             <span>Search</span>
           </a></li>
-          <li><a class="sidebar-link" data-section="trending">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M16 6l2.29 2.29-4.88 4.88-4-4L2 16.59 3.41 18l6-6 4 4 6.3-6.29L22 12V6z"/>
-            </svg>
+          <li><a class="sidebar-link" data-section="trending" href="#">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M16 6l2.29 2.29-4.88 4.88-4-4L2 16.59 3.41 18l6-6 4 4 6.3-6.29L22 12V6z"/></svg>
             <span>Trending</span>
           </a></li>
-          <li><a class="sidebar-link" data-section="playlists">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-8 12.5v-9l6 4.5-6 4.5z"/>
-            </svg>
-            <span>Playlists</span>
-          </a></li>
-          <li><a class="sidebar-link" data-section="genres">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/>
-            </svg>
+          <li><a class="sidebar-link" data-section="genres" href="#">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>
             <span>Genres</span>
           </a></li>
-          <li><a class="sidebar-link" data-section="library">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-1 9H9V9h10v2zm-4 4H9v-2h6v2zm4-8H9V5h10v2z"/>
-            </svg>
+        </ul>
+
+        <div class="sidebar-section-label">Library</div>
+        <ul class="sidebar-nav">
+          <li><a class="sidebar-link" data-section="playlists" href="#">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-8 12.5v-9l6 4.5-6 4.5z"/></svg>
+            <span>Playlists</span>
+          </a></li>
+          <li><a class="sidebar-link" data-section="library" href="#">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-1 9H9V9h10v2zm-4 4H9v-2h6v2zm4-8H9V5h10v2z"/></svg>
             <span>Library</span>
           </a></li>
-          <li><a class="sidebar-link" data-section="favorites">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
-            </svg>
+          <li><a class="sidebar-link" data-section="favorites" href="#">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
             <span>Favorites</span>
-          </a></li>
-          <li><a class="sidebar-link" data-section="settings">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/>
-            </svg>
-            <span>Settings</span>
-          </a></li>
-          <li><a class="sidebar-link" data-section="contacts">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/>
-            </svg>
-            <span>Contact</span>
+            <span class="sidebar-badge" id="fav-count"></span>
           </a></li>
         </ul>
-      </div>
-      <div class="sidebar-footer">
-        &copy; 2025 Musiv. All rights reserved.
+
+        <div class="sidebar-bottom">
+          <a class="sidebar-link" data-section="settings" href="#">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
+            <span>Settings</span>
+          </a>
+          <a class="sidebar-link" data-section="contacts" href="#">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
+            <span>Contact</span>
+          </a>
+          <div class="sidebar-footer">
+            <span>© 2025 Musiv</span>
+            <button class="kbd-hint-btn" id="btn-shortcuts" title="Keyboard shortcuts">?</button>
+          </div>
+        </div>
       </div>
     </nav>
 
-    <!-- Main Content -->
+    <!-- Main -->
     <main id="main-content">
-      <div class="topbar">
+      <header class="topbar">
+        <button id="sidebar-toggle" class="icon-btn" aria-label="Menu">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
+        </button>
         <div class="search-bar">
-          <input type="text" id="search-input" placeholder="Search for songs, artists, or albums...">
-          <span class="search-icon">
-            <svg width="30" height="20" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
-            </svg>
-          </span>
+          <svg class="search-icon-el" width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+          <input type="text" id="search-input" placeholder="Songs, artists, albums…" autocomplete="off" spellcheck="false">
+          <kbd class="search-shortcut">/</kbd>
         </div>
-        <button id="sidebar-toggle" class="sidebar-toggle-btn">☰</button>
-      </div>
+        <div class="topbar-end">
+          <button class="icon-btn" id="btn-queue" aria-label="Queue" title="Queue">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z"/></svg>
+          </button>
+        </div>
+      </header>
 
-      <div id="section-area">
-        <!-- Content will be dynamically loaded here -->
-      </div>
+      <div id="section-area"></div>
     </main>
   </div>
 
-  <!-- Audio Player -->
-  <div id="audio-player-bar">
-    <div class="player-cover">
-      <img id="player-cover" src="https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/eb777e7a-7d3c-487e-865a-fc83920564a1/d7kpm65-437b2b46-06cd-4a86-9041-cc8c3737c6f0.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiJcL2ZcL2ViNzc3ZTdhLTdkM2MtNDg3ZS04NjVhLWZjODM5MjA1NjRhMVwvZDdrcG02NS00MzdiMmI0Ni0wNmNkLTRhODYtOTA0MS1jYzhjMzczN2M2ZjAuanBnIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmZpbGUuZG93bmxvYWQiXX0.-bP80wHw6Jb8moQRsxURQxONZvAMnJ6xLDD8Es7mHps" alt="Album Cover">
-    </div>
-    <div class="player-info">
-      <div class="player-title" id="player-title">No Song Selected</div>
-      <div class="player-artist" id="player-artist">Select a song to play</div>
-    </div>
-    <div class="player-controls">
-      <button class="player-btn" id="btn-shuffle" title="Shuffle">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M10.59 9.17L5.41 4 4 5.41l5.17 5.17 1.42-1.41zM14.5 4l2.04 2.04L4 18.59 5.41 20 17.96 7.46 20 9.5V4h-5.5zm.33 9.41l-1.41 1.41 3.13 3.13L14.5 20H20v-5.5l-2.04 2.04-3.13-3.13z"/>
-        </svg>
-      </button>
-      <button class="player-btn" id="btn-prev" title="Previous">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-          <path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/>
-        </svg>
-      </button>
-      <button class="player-btn primary" id="btn-playpause" title="Play">▶</button>
-      <button class="player-btn" id="btn-next" title="Next">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-          <path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/>
-        </svg>
-      </button>
-      <button class="player-btn" id="btn-repeat" title="Repeat">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" class="repeat-icon">
-          <path d="M7 7h10v3l4-4-4-4v3H5v6h2V7zm10 10H7v-3l-4 4 4 4v-3h12v-6h-2v4z"/>
-        </svg>
-      </button>
-      <button class="player-btn" id="btn-video" title="Music Video">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-          <path d="M10 16.5l6-4.5-6-4.5v9zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/>
-        </svg>
-      </button>
-    </div>
-    <div class="player-progress">
-      <span class="progress-time" id="player-current">0:00</span>
-      <div class="progress-bar" id="progress-bar">
-        <div class="progress-bar-inner" id="progress-inner"></div>
-        <div class="progress-thumb" id="progress-thumb" aria-hidden="true"></div>
-        <div class="progress-tooltip" id="progress-tooltip" aria-hidden="true">0:00 / 0:00</div>
+  <!-- Player Bar -->
+  <div id="audio-player-bar" role="region" aria-label="Now playing">
+    <div class="player-track">
+      <div class="player-art-wrap">
+        <img id="player-cover" src="" alt="Album art" class="player-art">
+        <div class="player-art-ph" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>
+        </div>
+        <div class="player-art-ring" aria-hidden="true"></div>
       </div>
-      <span class="progress-time" id="player-duration">0:00</span>
+      <div class="player-meta">
+        <div class="player-title" id="player-title">No song selected</div>
+        <button class="player-artist-link" id="player-artist-link">Choose a song to play</button>
+      </div>
+      <button class="player-fav-btn" id="player-fav-btn" aria-label="Favorite">
+        <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+      </button>
     </div>
-    <div class="player-visualizer" aria-hidden="true">
-      <canvas id="audio-visualizer" width="140" height="32"></canvas>
+
+    <div class="player-center">
+      <div class="player-controls">
+        <button class="ctrl-btn" id="btn-shuffle" title="Shuffle (S)">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M10.59 9.17L5.41 4 4 5.41l5.17 5.17 1.42-1.41zM14.5 4l2.04 2.04L4 18.59 5.41 20 17.96 7.46 20 9.5V4h-5.5zm.33 9.41l-1.41 1.41 3.13 3.13L14.5 20H20v-5.5l-2.04 2.04-3.13-3.13z"/></svg>
+        </button>
+        <button class="ctrl-btn" id="btn-prev" title="Previous (Shift+P)">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/></svg>
+        </button>
+        <button class="ctrl-btn play-btn" id="btn-playpause" title="Play/Pause (Space)">
+          <svg id="icon-play" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+          <svg id="icon-pause" viewBox="0 0 24 24" fill="currentColor" style="display:none"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+        </button>
+        <button class="ctrl-btn" id="btn-next" title="Next (Shift+N)">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg>
+        </button>
+        <button class="ctrl-btn" id="btn-repeat" title="Repeat (R)">
+          <svg class="repeat-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M7 7h10v3l4-4-4-4v3H5v6h2V7zm10 10H7v-3l-4 4 4 4v-3h12v-6h-2v4z"/></svg>
+        </button>
+      </div>
+      <div class="progress-row">
+        <span class="time-mono" id="player-current">0:00</span>
+        <div class="progress-track" id="progress-bar" tabindex="0" role="slider" aria-label="Seek">
+          <div class="progress-fill" id="progress-inner"></div>
+          <div class="progress-thumb" id="progress-thumb" aria-hidden="true"></div>
+          <div class="progress-tooltip" id="progress-tooltip" aria-hidden="true">0:00</div>
+        </div>
+        <span class="time-mono" id="player-duration">0:00</span>
+      </div>
     </div>
-    <div class="player-volume">
-      <span>
-        <svg width="20" height="20" viewBox="0 0 24 15" fill="currentColor">
-          <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>
-        </svg>
-      </span>
-      <input type="range" min="0" max="1" step="0.01" class="volume-slider" id="volume-range" value="0.8">
+
+    <div class="player-right">
+      <button class="ctrl-btn sm" id="btn-video" title="Music Video (V)">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M10 16.5l6-4.5-6-4.5v9zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/></svg>
+      </button>
+      <div class="vol-group">
+        <button class="ctrl-btn sm" id="btn-mute" title="Mute (M)">
+          <svg id="icon-vol-hi" viewBox="0 0 24 24" fill="currentColor"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+          <svg id="icon-vol-off" viewBox="0 0 24 24" fill="currentColor" style="display:none"><path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/></svg>
+        </button>
+        <input type="range" min="0" max="1" step="0.01" class="vol-slider" id="volume-range" value="0.8">
+      </div>
+      <canvas id="audio-visualizer" class="viz-canvas" width="80" height="24" aria-hidden="true"></canvas>
     </div>
-    <!-- Enhanced audio element -->
-    <audio 
-      id="audio" 
-      preload="metadata" 
-      crossorigin="anonymous"
-      playsinline
-      webkit-playsinline
-    ></audio>
+
+    <audio id="audio" preload="metadata" crossorigin="anonymous" playsinline></audio>
   </div>
 
-  <!-- YouTube Video Panel -->
-  <div id="youtube-panel">
-    <div class="video-container">
-      <button class="video-close" id="close-youtube">&times;</button>
-      <div class="video-title" id="video-title">Music Video</div>
-      <div id="youtube-player"></div>
-      <div class="video-info">
-        <div class="video-song-title" id="video-song-title">No song selected</div>
-        <div class="video-song-artist" id="video-song-artist">Select a song to play video</div>
+  <!-- Mobile Bottom Nav -->
+  <nav class="mobile-nav" aria-label="Mobile navigation">
+    <a class="mob-link active" data-section="home" href="#"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg><span>Home</span></a>
+    <a class="mob-link" data-section="search" href="#"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg><span>Search</span></a>
+    <a class="mob-link" data-section="trending" href="#"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 6l2.29 2.29-4.88 4.88-4-4L2 16.59 3.41 18l6-6 4 4 6.3-6.29L22 12V6z"/></svg><span>Trending</span></a>
+    <a class="mob-link" data-section="favorites" href="#"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg><span>Liked</span></a>
+    <button class="mob-link" id="mob-queue-btn"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z"/></svg><span>Queue</span></button>
+  </nav>
+
+  <!-- Queue Panel -->
+  <aside id="queue-panel" class="side-panel" hidden>
+    <div class="side-panel-head">
+      <h3>Queue</h3>
+      <div style="display:flex;gap:6px">
+        <button class="icon-btn sm" id="btn-clear-queue" title="Clear queue">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
+        </button>
+        <button class="icon-btn sm" id="close-queue">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
       </div>
     </div>
-  </div>
+    <div class="queue-now" id="queue-now-playing"></div>
+    <div class="side-panel-label">Next Up</div>
+    <ul class="queue-list" id="queue-list"></ul>
+  </aside>
 
-  <!-- Settings Panel -->
-  <div id="settings-panel">
-    <div class="settings-box">
-      <button class="settings-close" id="close-settings">&times;</button>
-      <div class="settings-title">Settings</div>
-      
-      <div class="settings-row">
-        <label class="settings-label" for="theme-select">Theme</label>
-        <select class="settings-select" id="theme-select">
-          <option value="dark" selected>Dark</option>
-          <option value="light">Light</option>
-          <option value="auto">Auto (System)</option>
-        </select>
+  <!-- YouTube -->
+  <div id="youtube-panel" class="modal-overlay" hidden>
+    <div class="modal-card yt-card">
+      <div class="modal-card-head">
+        <span class="modal-card-title" id="video-title">Music Video</span>
+        <button class="icon-btn" id="close-youtube"><svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></button>
       </div>
-      
-      <div class="settings-row">
-        <label class="settings-label" for="quality-select">Audio Quality</label>
-        <select class="settings-select" id="quality-select">
-          <option value="high" selected>High (320kbps)</option>
-          <option value="medium">Medium (192kbps)</option>
-          <option value="low">Low (128kbps)</option>
-        </select>
-      </div>
-      
-      <div class="settings-row">
-        <label class="settings-label" for="acc-name">Account Name</label>
-        <input class="settings-input" id="acc-name" type="text" placeholder="Your name" value="Musiv User">
-      </div>
-      
-      <div class="settings-btn-row">
-        <button class="settings-btn secondary" id="logout-btn">Logout</button>
-        <button class="settings-btn primary" id="save-settings">Save Changes</button>
+      <div class="yt-embed"><div id="youtube-player"></div></div>
+      <div class="yt-info-row">
+        <div id="video-song-title" class="yt-song"></div>
+        <div id="video-song-artist" class="yt-artist"></div>
       </div>
     </div>
   </div>
 
-  <!-- Contacts Panel -->
-  <div id="contacts-panel">
-    <div class="settings-box">
-      <button class="settings-close" id="close-contacts">&times;</button>
-      <div class="settings-title">Contact Us</div>
-      
-      <div class="settings-row">
-        <p>Have questions or feedback? Reach out to us through any of these channels:</p>
+  <!-- Settings -->
+  <div id="settings-panel" class="modal-overlay" hidden>
+    <div class="modal-card">
+      <div class="modal-card-head">
+        <span class="modal-card-title">Settings</span>
+        <button class="icon-btn" id="close-settings"><svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></button>
       </div>
-      
-      <div class="social-buttons">
-        <a class="social-btn whatsapp" href="https://wa.me/+260776681802" target="_blank">
-          <i class="fab fa-whatsapp"></i>
-          <span>WhatsApp</span>
-        </a>
-        <a class="social-btn email" href="mailto:gabrieljoshuabanda81@gmail.com">
-          <i class="fas fa-envelope"></i>
-          <span>Email</span>
-        </a>
-        <a class="social-btn twitter" href="https://twitter.com/gabrielbandax" target="_blank">
-          <i class="fab fa-twitter"></i>
-          <span>Twitter</span>
-        </a>
-        <a class="social-btn instagram" href="https://instagram.com/gabrielbandax" target="_blank">
-          <i class="fab fa-instagram"></i>
-          <span>Instagram</span>
-        </a>
-        <a class="social-btn facebook" href="https://facebook.com/gabrielbandax" target="_blank">
-          <i class="fab fa-facebook"></i>
-          <span>Facebook</span>
-        </a>
-        <a class="social-btn github" href="https://github.com/Gabriel-Banda" target="_blank">
-          <i class="fab fa-github"></i>
-          <span>GitHub</span>
-        </a>
-        <a class="social-btn youtube" href="https://www.youtube.com/channel/gabrielbandax" target="_blank">
-          <i class="fab fa-youtube"></i>
-          <span>YouTube</span>
-        </a>
-        <a class="social-btn tiktok" href="https://www.tiktok.com/@gabrielbandax" target="_blank">
-          <i class="fab fa-tiktok"></i>
-          <span>TikTok</span>
-        </a>
-        <a class="social-btn discord" href="https://www.discord.gg/@gabrielbandax" target="_blank">
-          <i class="fab fa-discord"></i>
-          <span>Discord</span>
-        </a>
-        <a class="social-btn threads" href="http://www.threads.com/@gabrielbandax" target="_blank">
-          <i class="fab fa-threads"></i>
-          <span>Threads</span>
-        </a>
+      <div class="modal-card-body">
+        <div class="settings-section">
+          <div class="settings-section-label">Appearance</div>
+          <div class="setting-row"><label>Theme</label><select id="theme-select"><option value="dark" selected>Dark</option><option value="light">Light</option></select></div>
+          <div class="setting-row"><label>Accent</label>
+            <select id="accent-select">
+              <option value="blue" selected>Ocean Blue</option>
+              <option value="purple">Electric Purple</option>
+              <option value="green">Neon Green</option>
+              <option value="orange">Amber</option>
+              <option value="pink">Rose</option>
+            </select>
+          </div>
+        </div>
+        <div class="settings-section">
+          <div class="settings-section-label">Playback</div>
+          <div class="setting-row"><label>Quality</label><select id="quality-select"><option value="high" selected>High (320kbps)</option><option value="medium">Medium (192kbps)</option><option value="low">Low (128kbps)</option></select></div>
+          <div class="setting-row setting-row-toggle"><label>Autoplay</label><label class="toggle"><input type="checkbox" id="autoplay-toggle" checked><span class="toggle-track"><span class="toggle-knob"></span></span></label></div>
+        </div>
+        <div class="settings-section">
+          <div class="settings-section-label">Account</div>
+          <div class="setting-row"><label>Name</label><input id="acc-name" type="text" placeholder="Display name" value="Musiv User"></div>
+        </div>
       </div>
-      
-      <div class="settings-row text-center mt-3">
-        <p style="font-size: 0.875rem; color: var(--text-muted);">
-          Artists: Promote your music on Musiv!
-        </p>
+      <div class="modal-card-foot">
+        <button class="btn-ghost" id="logout-btn">Sign Out</button>
+        <button class="btn-primary" id="save-settings">Save</button>
       </div>
     </div>
   </div>
 
-  <!-- YouTube IFrame API -->
+  <!-- Contact -->
+  <div id="contacts-panel" class="modal-overlay" hidden>
+    <div class="modal-card">
+      <div class="modal-card-head">
+        <span class="modal-card-title">Contact</span>
+        <button class="icon-btn" id="close-contacts"><svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></button>
+      </div>
+      <div class="modal-card-body">
+        <p class="modal-intro">Questions or want to promote your music? Reach out!</p>
+        <div class="social-grid">
+          <a class="social-tile" href="https://wa.me/+260776681802" target="_blank"><span class="social-ico si-wa"><i class="fab fa-whatsapp"></i></span>WhatsApp</a>
+          <a class="social-tile" href="mailto:gabrieljoshuabanda81@gmail.com"><span class="social-ico si-em"><i class="fas fa-envelope"></i></span>Email</a>
+          <a class="social-tile" href="https://twitter.com/gabrielbandax" target="_blank"><span class="social-ico si-tw"><i class="fab fa-twitter"></i></span>Twitter</a>
+          <a class="social-tile" href="https://instagram.com/gabrielbandax" target="_blank"><span class="social-ico si-ig"><i class="fab fa-instagram"></i></span>Instagram</a>
+          <a class="social-tile" href="https://github.com/Gabriel-Banda" target="_blank"><span class="social-ico si-gh"><i class="fab fa-github"></i></span>GitHub</a>
+          <a class="social-tile" href="https://www.tiktok.com/@gabrielbandax" target="_blank"><span class="social-ico si-tt"><i class="fab fa-tiktok"></i></span>TikTok</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Keyboard Shortcuts -->
+  <div id="shortcuts-panel" class="modal-overlay" hidden>
+    <div class="modal-card kbd-card">
+      <div class="modal-card-head">
+        <span class="modal-card-title">Keyboard Shortcuts</span>
+        <button class="icon-btn" id="close-shortcuts"><svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></button>
+      </div>
+      <div class="kbd-grid">
+        <div class="kbd-col">
+          <div class="kbd-group-label">Playback</div>
+          <div class="kbd-row"><kbd>Space</kbd><span>Play / Pause</span></div>
+          <div class="kbd-row"><kbd>←</kbd><span>Seek −5s</span></div>
+          <div class="kbd-row"><kbd>→</kbd><span>Seek +5s</span></div>
+          <div class="kbd-row"><kbd>Shift P</kbd><span>Previous</span></div>
+          <div class="kbd-row"><kbd>Shift N</kbd><span>Next</span></div>
+        </div>
+        <div class="kbd-col">
+          <div class="kbd-group-label">Controls</div>
+          <div class="kbd-row"><kbd>M</kbd><span>Mute</span></div>
+          <div class="kbd-row"><kbd>↑</kbd><span>Volume +5%</span></div>
+          <div class="kbd-row"><kbd>↓</kbd><span>Volume −5%</span></div>
+          <div class="kbd-row"><kbd>S</kbd><span>Shuffle</span></div>
+          <div class="kbd-row"><kbd>R</kbd><span>Repeat</span></div>
+          <div class="kbd-row"><kbd>/</kbd><span>Focus search</span></div>
+          <div class="kbd-row"><kbd>?</kbd><span>Shortcuts</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="sidebar-overlay" aria-hidden="true"></div>
+
   <script src="https://www.youtube.com/iframe_api"></script>
   <script src="js/songs.js"></script>
   <script src="js/main.js"></script>
-  
-  <!-- Favicon loading script -->
-  <script>
-    // Favicon loading and fallback handler
-    (function() {
-      'use strict';
-      
-      // List of favicon paths to try
-      const faviconPaths = [
-        'Assets/Images/favicon.ico',
-        'Assets/Images/favicon-16x16.png',
-        'Assets/Images/favicon-32x32.png',
-        'Assets/Images/favicon-96x96.png',
-        'Assets/Images/favicon-192x192.png',
-        'Assets/Images/Musiv.png' // Fallback to original logo
-      ];
-      
-      // SVG fallback favicon (base64 encoded)
-      const svgFavicon = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">🎵</text></svg>';
-      
-      let currentFaviconIndex = 0;
-      let faviconLoaded = false;
-      
-      // Function to load favicon
-      function loadFavicon() {
-        if (faviconLoaded || currentFaviconIndex >= faviconPaths.length) {
-          // All favicons failed, use SVG fallback
-          if (!faviconLoaded) {
-            setFavicon(svgFavicon);
-            console.log('Using SVG fallback favicon');
-          }
-          return;
-        }
-        
-        const faviconPath = faviconPaths[currentFaviconIndex];
-        const img = new Image();
-        
-        img.onload = function() {
-          console.log('Favicon loaded:', faviconPath);
-          faviconLoaded = true;
-          
-          // Create a temporary link element to set favicon
-          setFavicon(faviconPath);
-        };
-        
-        img.onerror = function() {
-          console.warn('Failed to load favicon:', faviconPath);
-          currentFaviconIndex++;
-          
-          // Try next favicon after a short delay
-          setTimeout(loadFavicon, 100);
-        };
-        
-        // Start loading the image
-        img.src = faviconPath;
-        
-        // Set a timeout in case the image takes too long
-        setTimeout(function() {
-          if (!faviconLoaded && img.complete === false) {
-            console.warn('Favicon loading timeout:', faviconPath);
-            img.src = ''; // Cancel loading
-            currentFaviconIndex++;
-            loadFavicon();
-          }
-        }, 2000); // 2 second timeout
-      }
-      
-      // Function to set favicon
-      function setFavicon(url) {
-        // Remove existing favicon links
-        const existingLinks = document.querySelectorAll('link[rel*="icon"]');
-        existingLinks.forEach(link => {
-          if (!link.hasAttribute('data-fallback')) {
-            link.parentNode.removeChild(link);
-          }
-        });
-        
-        // Add new favicon link
-        const link = document.createElement('link');
-        link.rel = 'icon';
-        link.href = url;
-        
-        if (url.includes('.ico')) {
-          link.type = 'image/x-icon';
-        } else if (url.includes('.png')) {
-          link.type = 'image/png';
-          // Try to determine size from filename
-          const match = url.match(/(\d+)x(\d+)/);
-          if (match) {
-            link.sizes = match[1] + 'x' + match[2];
-          }
-        } else if (url.includes('svg')) {
-          link.type = 'image/svg+xml';
-        }
-        
-        document.head.appendChild(link);
-      }
-      
-      // Start loading favicon when DOM is ready
-      if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', loadFavicon);
-      } else {
-        loadFavicon();
-      }
-      
-      // Also listen for page show event (for back/forward cache)
-      window.addEventListener('pageshow', loadFavicon);
-      
-    })();
-  </script>
-  
-  <!-- Audio Context Initialization Script -->
-  <script>
-    // Audio Context Initialization Script
-    (function() {
-      'use strict';
-      
-      // Show audio context notice on mobile
-      const audioContextNotice = document.getElementById('audio-context-notice');
-      const audioLoading = document.getElementById('audio-loading');
-      let audioContextInitialized = false;
-      let wakeLock = null;
-      
-      // Initialize audio on first user interaction
-      function initAudio() {
-        if (audioContextInitialized) return;
-        
-        try {
-          // Create and initialize audio context
-          const AudioContext = window.AudioContext || window.webkitAudioContext;
-          if (AudioContext) {
-            const audioContext = new AudioContext();
-            
-            // Resume audio context
-            if (audioContext.state === 'suspended') {
-              audioContext.resume();
-            }
-            
-            console.log('Audio context initialized');
-            audioContextInitialized = true;
-            audioContextNotice.style.display = 'none';
-          }
-        } catch (error) {
-          console.error('Audio context initialization error:', error);
-        }
-        
-        // Try to request wake lock for background playback
-        requestWakeLock();
-        
-        // Remove event listeners after first interaction
-        document.removeEventListener('click', initAudio);
-        document.removeEventListener('touchstart', initAudio);
-        document.removeEventListener('keydown', initAudio);
-      }
-      
-      // Request wake lock for background playback
-      async function requestWakeLock() {
-        if ('wakeLock' in navigator) {
-          try {
-            wakeLock = await navigator.wakeLock.request('screen');
-            console.log('Wake lock activated');
-            
-            // Release wake lock when page becomes hidden
-            document.addEventListener('visibilitychange', async () => {
-              if (document.visibilityState === 'hidden' && wakeLock !== null) {
-                await wakeLock.release();
-                wakeLock = null;
-                console.log('Wake lock released');
-              } else if (document.visibilityState === 'visible') {
-                // Re-request wake lock when page becomes visible again
-                requestWakeLock();
-              }
-            });
-          } catch (err) {
-            console.warn('Wake lock not supported:', err);
-          }
-        }
-      }
-      
-      // Show loading state for audio
-      function showAudioLoading() {
-        if (audioLoading) {
-          audioLoading.classList.add('active');
-        }
-      }
-      
-      function hideAudioLoading() {
-        if (audioLoading) {
-          audioLoading.classList.remove('active');
-        }
-      }
-      
-      // Handle page visibility changes
-      document.addEventListener('visibilitychange', function() {
-        if (!document.hidden && audioContextInitialized) {
-          // Page became visible - ensure audio continues
-          console.log('Page visible - ensuring audio playback');
-        }
-      });
-      
-      // Handle beforeunload to clean up
-      window.addEventListener('beforeunload', function() {
-        if (wakeLock !== null) {
-          wakeLock.release();
-          wakeLock = null;
-        }
-      });
-      
-      // Initialize audio on multiple interaction types
-      document.addEventListener('click', initAudio, { once: true });
-      document.addEventListener('touchstart', initAudio, { once: true });
-      document.addEventListener('keydown', initAudio, { once: true });
-      
-      // Set a timeout to hide the notice if not clicked
-      setTimeout(() => {
-        if (!audioContextInitialized && audioContextNotice) {
-          audioContextNotice.style.display = 'block';
-        }
-      }, 1000);
-      
-      // Expose functions to global scope for main.js
-      window.audioUtils = {
-        showAudioLoading: showAudioLoading,
-        hideAudioLoading: hideAudioLoading,
-        isAudioContextInitialized: function() { return audioContextInitialized; }
-      };
-      
-      // Add audio error handling
-      window.addEventListener('error', function(e) {
-        if (e.target && e.target.tagName === 'AUDIO') {
-          console.error('Audio error:', e.error);
-          hideAudioLoading();
-        }
-      });
-      
-    })();
-    
-    // Fix for iOS Safari
-    (function() {
-      const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-      const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
-      
-      if (isIOS || isSafari) {
-        // Add iOS-specific fixes
-        document.documentElement.style.setProperty('--ios-safe-area', 'env(safe-area-inset-bottom)');
-        
-        // Prevent rubber-band scrolling
-        document.addEventListener('touchmove', function(e) {
-          if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
-            return;
-          }
-          e.preventDefault();
-        }, { passive: false });
-        
-        // Fix for iOS audio playback
-        window.addEventListener('pageshow', function(event) {
-          if (event.persisted) {
-            // Page was restored from bfcache - resume audio
-            const audio = document.getElementById('audio');
-            if (audio && !audio.paused) {
-              audio.load();
-              audio.play().catch(() => {
-                console.log('Audio playback resumed after bfcache restore');
-              });
-            }
-          }
-        });
-      }
-    })();
-  </script>
 </body>
 </html>
