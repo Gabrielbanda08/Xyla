@@ -52,4 +52,4 @@ self.addEventListener('fetch', e => {
       }).catch(() => cached);
     })
   );
-});
+}); 
