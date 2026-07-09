@@ -13,6 +13,7 @@ let currentVolume   = 0.8;
 let prevVolume      = 0.8;
 let activeSongs     = window.songs; // Currently active list
 let isDragging      = false;
+let dragBar         = null;
 let errorCount      = 0;
 const MAX_ERRORS    = 3;
 let youtubePlayer   = null;
@@ -23,6 +24,8 @@ let analyserNode    = null;
 let sourceNode      = null;
 let vizRafId        = null;
 let currentTheme    = null;
+let queueNext       = [];          // user-built "up next" queue
+let currentSection  = 'home';
 
 let favorites = JSON.parse(localStorage.getItem('msv_favorites') || '[]');
 let playlists = JSON.parse(localStorage.getItem('msv_playlists') || 'null') || {
@@ -45,7 +48,8 @@ const audio           = $('audio');
 // Player
 const playerCover     = $('player-cover');
 const playerTitle     = $('player-title');
-const playerArtist    = $('player-artist');
+const playerArtist    = $('player-artist-link');
+const playerTrack     = document.querySelector('.player-track');
 const btnPlay         = $('btn-playpause');
 const iconPlay        = $('icon-play');
 const iconPause       = $('icon-pause');
@@ -64,13 +68,16 @@ const timeDuration    = $('player-duration');
 const volumeRange     = $('volume-range');
 const visualizerCanvas = $('audio-visualizer');
 const vizCtx          = visualizerCanvas ? visualizerCanvas.getContext('2d') : null;
-const volUp           = $('icon-vol-up');
+const volUp           = $('icon-vol-hi');
 const volOff          = $('icon-vol-off');
 
 // Panels
 const ytPanel         = $('youtube-panel');
 const settingsPanel   = $('settings-panel');
 const contactsPanel   = $('contacts-panel');
+const queuePanel      = $('queue-panel');
+const shortcutsPanel  = $('shortcuts-panel');
+const npv             = $('now-playing-view');
 
 // ─── Init ──────────────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
@@ -85,6 +92,8 @@ document.addEventListener('DOMContentLoaded', () => {
   setupPlayer();
   setupKeyboard();
   setupSwipe();
+  setupQueueAndShortcuts();
+  setupNowPlayingView();
   initMediaSession();
 
   // Initialize YouTube
@@ -117,7 +126,7 @@ function notify(msg, type = 'info') {
 
 // ─── Navigation ───────────────────────────────────────────────────────
 function setupNavigation() {
-  document.querySelectorAll('.sidebar-link').forEach(link => {
+  document.querySelectorAll('.sidebar-link, .mob-link').forEach(link => {
     link.addEventListener('click', e => {
       e.preventDefault();
       const section = link.dataset.section;
@@ -126,8 +135,6 @@ function setupNavigation() {
       if (section === 'settings') { openModal(settingsPanel); return; }
       if (section === 'contacts') { openModal(contactsPanel); return; }
 
-      document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
-      link.classList.add('active');
       loadSection(section);
       closeSidebar();
     });
@@ -171,6 +178,83 @@ function applyTheme(theme) {
   document.body.classList.toggle('light-theme', theme === 'light');
 }
 
+// ─── Queue Panel & Shortcuts ───────────────────────────────────────────
+function openSidePanel(panel) {
+  panel.hidden = false;
+  requestAnimationFrame(() => panel.classList.add('active'));
+}
+function closeSidePanel(panel) {
+  panel.classList.remove('active');
+  setTimeout(() => { panel.hidden = true; }, 300);
+}
+
+function setupQueueAndShortcuts() {
+  const openQueue = () => { renderQueuePanel(); openSidePanel(queuePanel); };
+  $('btn-queue').addEventListener('click', openQueue);
+  const mobQueueBtn = $('mob-queue-btn');
+  if (mobQueueBtn) mobQueueBtn.addEventListener('click', openQueue);
+  $('close-queue').addEventListener('click', () => closeSidePanel(queuePanel));
+  $('btn-clear-queue').addEventListener('click', () => {
+    queueNext = [];
+    renderQueuePanel();
+    notify('Queue cleared', 'info');
+  });
+
+  $('btn-shortcuts').addEventListener('click', () => openModal(shortcutsPanel));
+  $('close-shortcuts').addEventListener('click', () => closeModal(shortcutsPanel));
+  shortcutsPanel.addEventListener('click', e => { if (e.target === shortcutsPanel) closeModal(shortcutsPanel); });
+}
+
+function renderQueuePanel() {
+  const nowPlaying = $('queue-now-playing');
+  const list = $('queue-list');
+  const song = activeSongs[currentIndex];
+
+  nowPlaying.innerHTML = song ? `
+    <div class="queue-now-song">
+      <img src="${escHtml(song.cover || '')}" alt="" onerror="this.style.opacity=0">
+      <div>
+        <div class="queue-now-title">${escHtml(song.title)}</div>
+        <div class="queue-now-artist">${escHtml(song.artist)}</div>
+      </div>
+    </div>` : `<p class="queue-empty-txt">Nothing playing yet</p>`;
+
+  const upNext = [...queueNext];
+  const rest = activeSongs.slice(currentIndex + 1);
+  const combined = upNext.map(s => ({ ...s, __queued: true })).concat(rest);
+
+  list.innerHTML = combined.length ? combined.map((s, i) => `
+    <li onclick="jumpToQueueItem(${i})">
+      <img src="${escHtml(s.cover || '')}" alt="" onerror="this.style.opacity=0">
+      <div class="queue-li-meta">
+        <div class="queue-li-title">${escHtml(s.title)}</div>
+        <div class="queue-li-artist">${escHtml(s.artist)}</div>
+      </div>
+      ${s.__queued ? '<span class="queue-tag">Next</span>' : ''}
+    </li>`).join('') : `<li class="queue-empty-txt" style="border:none">Queue is empty. Add songs with the queue icon on any track.</li>`;
+}
+
+function jumpToQueueItem(i) {
+  if (i < queueNext.length) {
+    const song = queueNext[i];
+    queueNext.splice(0, i + 1);
+    playFromQueue(song);
+  } else {
+    const restIndex = currentIndex + 1 + (i - queueNext.length);
+    playSong(restIndex, activeSongs);
+  }
+  renderQueuePanel();
+}
+
+function addToQueue(e, songId) {
+  e.stopPropagation();
+  const song = window.songs.find(s => s.id === songId);
+  if (!song) return;
+  queueNext.push(song);
+  notify(`Added "${song.title}" to queue`, 'success');
+  if (!queuePanel.hidden) renderQueuePanel();
+}
+
 function toggleSidebar() {
   sidebar.classList.toggle('active');
   sidebarOverlay.classList.toggle('active');
@@ -190,6 +274,9 @@ function closeModal(panel) {
 
 // ─── Section Loading ──────────────────────────────────────────────────
 function loadSection(section) {
+  currentSection = section;
+  document.querySelectorAll('.sidebar-link, .mob-link').forEach(l => l.classList.remove('active'));
+  document.querySelectorAll(`[data-section="${section}"]`).forEach(l => l.classList.add('active'));
   // Show skeleton first
   sectionArea.innerHTML = buildSkeleton(6);
 
@@ -318,12 +405,15 @@ function buildCards(arr) {
       </div>
       <div class="music-card-body">
         <div class="music-card-title">${escHtml(song.title)}</div>
-        <div class="music-card-artist">${escHtml(song.artist)}</div>
-        <div class="music-card-album">${escHtml(song.album || '')}</div>
+        <div class="music-card-artist" onclick="event.stopPropagation();openArtistPage('${escHtml(song.artist).replace(/'/g,"\\'")}')">${escHtml(song.artist)}</div>
+        <div class="music-card-album" onclick="event.stopPropagation();openAlbumPage('${escHtml(song.album||'').replace(/'/g,"\\'")}','${escHtml(song.artist).replace(/'/g,"\\'")}')">${escHtml(song.album || '')}</div>
       </div>
       <div class="music-card-actions" onclick="event.stopPropagation()">
         <button class="card-action-btn ${isFav ? 'active' : ''}" onclick="toggleFav(event, ${song.id})" title="${isFav ? 'Remove from favorites' : 'Add to favorites'}">
           <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+        </button>
+        <button class="card-action-btn" onclick="addToQueue(event, ${song.id})" title="Add to queue">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z"/></svg>
         </button>
         <button class="card-action-btn" onclick="downloadSong(event, ${song.id})" title="Download">
           <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
@@ -432,6 +522,85 @@ function loadPlaylist(name) {
   lazyImages();
 }
 
+// ─── Artist & Album Pages ──────────────────────────────────────────────
+function openArtistPage(artistName) {
+  if (!artistName) return;
+  currentSection = 'artist';
+  document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
+  const songs = window.songs.filter(s => s.artist === artistName);
+  activeSongs = songs;
+  const hero = songs[0] || {};
+  sectionArea.innerHTML = `
+    <button class="back-btn" onclick="loadSection('home')">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+      Back
+    </button>
+    <div class="detail-hero">
+      <div class="detail-hero-bg" style="background-image:url('${escHtml(hero.cover || '')}')"></div>
+      <div class="detail-hero-art-wrap">
+        <img class="detail-hero-art" src="${escHtml(hero.cover || '')}" alt="" onerror="this.style.opacity=0">
+      </div>
+      <div class="detail-hero-meta">
+        <span class="detail-hero-eyebrow">Artist</span>
+        <h1 class="detail-hero-title">${escHtml(artistName)}</h1>
+        <p class="detail-hero-sub">${songs.length} track${songs.length !== 1 ? 's' : ''} in your library</p>
+        <button class="btn-primary detail-play-all" onclick="playSong(0, window.songs.filter(s=>s.artist==='${artistName.replace(/'/g,"\\'")}'))">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+          Play All
+        </button>
+      </div>
+    </div>
+    <div class="music-grid">${buildCards(songs)}</div>`;
+  bindCardClicks();
+  lazyImages();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function openAlbumPage(albumName, artistName) {
+  if (!albumName) { notify('No album info for this track', 'info'); return; }
+  currentSection = 'album';
+  document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
+  const songs = window.songs.filter(s => s.album === albumName && s.artist === artistName);
+  activeSongs = songs;
+  const hero = songs[0] || {};
+  sectionArea.innerHTML = `
+    <button class="back-btn" onclick="loadSection('home')">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+      Back
+    </button>
+    <div class="detail-hero">
+      <div class="detail-hero-bg" style="background-image:url('${escHtml(hero.cover || '')}')"></div>
+      <div class="detail-hero-art-wrap">
+        <img class="detail-hero-art" src="${escHtml(hero.cover || '')}" alt="" onerror="this.style.opacity=0">
+      </div>
+      <div class="detail-hero-meta">
+        <span class="detail-hero-eyebrow">Album</span>
+        <h1 class="detail-hero-title">${escHtml(albumName)}</h1>
+        <p class="detail-hero-sub">${escHtml(artistName)} · ${songs.length} track${songs.length !== 1 ? 's' : ''}</p>
+        <button class="btn-primary detail-play-all" onclick='playSong(0, window.songs.filter(s=>s.album===${JSON.stringify(albumName)}&&s.artist===${JSON.stringify(artistName)}))'>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+          Play All
+        </button>
+      </div>
+    </div>
+    <ul class="track-list">
+      ${songs.map((s, i) => `
+      <li class="track-row" data-index="${i}" data-id="${s.id}">
+        <span class="track-num">${i + 1}</span>
+        <div class="track-info">
+          <div class="track-title">${escHtml(s.title)}</div>
+        </div>
+        <button class="card-action-btn" onclick="event.stopPropagation();toggleFav(event, ${s.id})" title="Favorite">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+        </button>
+      </li>`).join('')}
+    </ul>`;
+  document.querySelectorAll('.track-row').forEach(row => {
+    row.addEventListener('click', () => playSong(parseInt(row.dataset.index, 10), songs));
+  });
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
 // ─── Favorites ────────────────────────────────────────────────────────
 function toggleFav(e, songId) {
   e.stopPropagation();
@@ -467,6 +636,8 @@ function updatePlayerFavBtn() {
   if (!cur || !btnFav) return;
   const isFav = favorites.some(f => f.id === cur.id);
   btnFav.classList.toggle('active', isFav);
+  const npvFav = $('npv-fav-btn');
+  if (npvFav) npvFav.classList.toggle('active', isFav);
 }
 
 btnFav.addEventListener('click', () => {
@@ -606,9 +777,21 @@ function stopViz() {
 function playSong(index, list = activeSongs) {
   if (!list.length) return;
   currentIndex = Math.max(0, Math.min(index, list.length - 1));
+  activeSongs = list;
   const song = list[currentIndex];
   if (!song) return;
+  playSongObject(song);
+}
 
+// Plays a song directly without touching currentIndex/activeSongs — used by
+// the manual "up next" queue so normal playback order resumes afterwards.
+function playFromQueue(song) {
+  resumeAudioCtx();
+  currentMode = 'audio';
+  playSongObject(song);
+}
+
+function playSongObject(song) {
   initAudioCtx();
   resumeAudioCtx();
 
@@ -631,6 +814,10 @@ function playSong(index, list = activeSongs) {
   playerTitle.textContent  = song.title;
   playerArtist.textContent = song.artist;
   updatePlayerFavBtn();
+  updateNowPlayingView(song);
+  if (!queuePanel.hidden) renderQueuePanel();
+  if (playerTrack) playerTrack.classList.remove('track-pop');
+  requestAnimationFrame(() => { if (playerTrack) playerTrack.classList.add('track-pop'); });
 
   // Highlight card
   document.querySelectorAll('.music-card').forEach(c => c.classList.remove('playing'));
@@ -659,7 +846,12 @@ function setPlayState(playing) {
   isPlaying = playing;
   iconPlay.style.display  = playing ? 'none' : 'block';
   iconPause.style.display = playing ? 'block' : 'none';
+  const npvPlay = $('npv-icon-play'), npvPause = $('npv-icon-pause');
+  if (npvPlay)  npvPlay.style.display  = playing ? 'none' : 'block';
+  if (npvPause) npvPause.style.display = playing ? 'block' : 'none';
+  if (npv) npv.classList.toggle('is-playing', playing);
   if (playing) startViz(); else stopViz();
+  if (playing && npv && !npv.hidden) startNpvViz(); else stopNpvViz();
   updateMediaSessionState();
 }
 
@@ -675,10 +867,10 @@ function setupPlayer() {
 
   // Progress
   progressBar.addEventListener('click', seekTo);
-  progressBar.addEventListener('mousedown', e => { isDragging = true; seekTo(e); });
+  progressBar.addEventListener('mousedown', e => { isDragging = true; dragBar = progressBar; seekTo(e); });
   document.addEventListener('mousemove', e => { if (isDragging) seekTo(e); });
   document.addEventListener('mouseup', () => { isDragging = false; });
-  progressBar.addEventListener('touchstart', e => { isDragging = true; seekToTouch(e); }, { passive: true });
+  progressBar.addEventListener('touchstart', e => { isDragging = true; dragBar = progressBar; seekToTouch(e); }, { passive: true });
   document.addEventListener('touchmove', e => { if (isDragging) seekToTouch(e); }, { passive: true });
   document.addEventListener('touchend', () => { isDragging = false; });
 
@@ -693,6 +885,8 @@ function setupPlayer() {
   // Audio events
   audio.addEventListener('loadedmetadata', () => {
     timeDuration.textContent = fmt(audio.duration);
+    const npvDur = $('npv-duration');
+    if (npvDur) npvDur.textContent = fmt(audio.duration);
   });
 
   audio.addEventListener('timeupdate', () => {
@@ -701,6 +895,10 @@ function setupPlayer() {
       progressFill.style.width = pct + '%';
       progressThumb.style.left = pct + '%';
       timeCurrent.textContent  = fmt(audio.currentTime);
+      const npvFill = $('npv-progress-fill'), npvThumb = $('npv-progress-thumb'), npvCur = $('npv-current');
+      if (npvFill)  npvFill.style.width  = pct + '%';
+      if (npvThumb) npvThumb.style.left  = pct + '%';
+      if (npvCur)   npvCur.textContent   = fmt(audio.currentTime);
     }
   });
 
@@ -765,6 +963,8 @@ function playNext() {
 function toggleShuffle() {
   isShuffled = !isShuffled;
   btnShuffle.classList.toggle('active', isShuffled);
+  const npvShuffle = $('npv-shuffle');
+  if (npvShuffle) npvShuffle.classList.toggle('active', isShuffled);
   notify(isShuffled ? 'Shuffle on' : 'Shuffle off', 'info');
 }
 
@@ -784,22 +984,45 @@ function updateRepeatBtn() {
   icon.innerHTML = `<path d="${paths[repeatMode]}"/>`;
   btnRepeat.classList.toggle('active', repeatMode > 0);
   btnRepeat.title = ['Repeat Off','Repeat All','Repeat One'][repeatMode];
+
+  const npvRepeat = $('npv-repeat');
+  if (npvRepeat) {
+    const npvIcon = npvRepeat.querySelector('.repeat-icon');
+    if (npvIcon) npvIcon.innerHTML = `<path d="${paths[repeatMode]}"/>`;
+    npvRepeat.classList.toggle('active', repeatMode > 0);
+    npvRepeat.title = ['Repeat Off','Repeat All','Repeat One'][repeatMode];
+  }
 }
 
-function seekTo(e) {
-  if (!audio.duration) return;
-  const rect = progressBar.getBoundingClientRect();
-  const pct  = Math.max(0, Math.min((e.clientX - rect.left) / rect.width, 1));
-  audio.currentTime = pct * audio.duration;
+function applySeekVisual(pct) {
   progressFill.style.width = pct * 100 + '%';
   progressThumb.style.left = pct * 100 + '%';
   timeCurrent.textContent  = fmt(audio.currentTime);
+  const npvFill = $('npv-progress-fill'), npvThumb = $('npv-progress-thumb'), npvCur = $('npv-current');
+  if (npvFill)  npvFill.style.width = pct * 100 + '%';
+  if (npvThumb) npvThumb.style.left = pct * 100 + '%';
+  if (npvCur)   npvCur.textContent  = fmt(audio.currentTime);
+}
+function resolveBar(e) {
+  return (e.currentTarget && e.currentTarget.classList && e.currentTarget.classList.contains('progress-track'))
+    ? e.currentTarget
+    : (dragBar || progressBar);
+}
+function seekTo(e) {
+  if (!audio.duration) return;
+  const bar  = resolveBar(e);
+  const rect = bar.getBoundingClientRect();
+  const pct  = Math.max(0, Math.min((e.clientX - rect.left) / rect.width, 1));
+  audio.currentTime = pct * audio.duration;
+  applySeekVisual(pct);
 }
 function seekToTouch(e) {
   if (!audio.duration || !e.touches.length) return;
-  const rect = progressBar.getBoundingClientRect();
+  const bar  = resolveBar(e);
+  const rect = bar.getBoundingClientRect();
   const pct  = Math.max(0, Math.min((e.touches[0].clientX - rect.left) / rect.width, 1));
   audio.currentTime = pct * audio.duration;
+  applySeekVisual(pct);
 }
 
 function toggleMute() {
@@ -818,6 +1041,124 @@ function updateVolIcon() {
   const muted = audio.muted || currentVolume === 0;
   volUp.style.display  = muted ? 'none' : 'block';
   volOff.style.display = muted ? 'block' : 'none';
+}
+
+// ─── Full-Screen Now Playing View ─────────────────────────────────────
+let npvVizRafId = null;
+
+function setupNowPlayingView() {
+  if (!npv) return;
+
+  if (playerTrack) {
+    playerTrack.addEventListener('click', e => {
+      if (e.target.closest('#player-fav-btn') || e.target.closest('#player-artist-link')) return;
+      openNowPlayingView();
+    });
+  }
+  playerArtist.addEventListener('click', e => {
+    e.stopPropagation();
+    const cur = activeSongs[currentIndex];
+    if (cur) openArtistPage(cur.artist);
+  });
+
+  $('npv-collapse').addEventListener('click', closeNowPlayingView);
+  $('npv-artist').addEventListener('click', () => {
+    const cur = activeSongs[currentIndex];
+    if (cur) { closeNowPlayingView(); openArtistPage(cur.artist); }
+  });
+  $('npv-fav-btn').addEventListener('click', () => {
+    const cur = activeSongs[currentIndex];
+    if (cur) toggleFav(new Event('click'), cur.id);
+  });
+  $('npv-playpause').addEventListener('click', togglePlay);
+  $('npv-prev').addEventListener('click', playPrev);
+  $('npv-next').addEventListener('click', playNext);
+  $('npv-shuffle').addEventListener('click', toggleShuffle);
+  $('npv-repeat').addEventListener('click', toggleRepeat);
+
+  const npvBar = $('npv-progress-bar');
+  npvBar.addEventListener('click', seekTo);
+  npvBar.addEventListener('mousedown', e => { isDragging = true; dragBar = npvBar; seekTo(e); });
+  npvBar.addEventListener('touchstart', e => { isDragging = true; dragBar = npvBar; seekToTouch(e); }, { passive: true });
+
+  document.querySelectorAll('.npv-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.npv-tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.npv-panel').forEach(p => p.classList.remove('active'));
+      tab.classList.add('active');
+      document.querySelector(`.npv-panel[data-panel="${tab.dataset.tab}"]`).classList.add('active');
+      if (tab.dataset.tab === 'queue') renderQueuePanel_NPV();
+      if (tab.dataset.tab === 'visualizer') startNpvViz();
+      else stopNpvViz();
+    });
+  });
+}
+
+function openNowPlayingView() {
+  const cur = activeSongs[currentIndex];
+  if (!cur) { notify('Choose a song to play first', 'info'); return; }
+  updateNowPlayingView(cur);
+  npv.hidden = false;
+  requestAnimationFrame(() => npv.classList.add('active'));
+  if (isPlaying) startNpvViz();
+}
+function closeNowPlayingView() {
+  npv.classList.remove('active');
+  stopNpvViz();
+  setTimeout(() => { npv.hidden = true; }, 420);
+}
+
+function updateNowPlayingView(song) {
+  if (!npv) return;
+  $('npv-cover').src = song.cover || '';
+  $('npv-bg').style.backgroundImage = song.cover ? `url('${song.cover}')` : 'none';
+  $('npv-title').textContent = song.title;
+  $('npv-artist').textContent = song.artist;
+  updateRepeatBtn();
+  $('npv-shuffle').classList.toggle('active', isShuffled);
+  if (document.querySelector('.npv-tab[data-tab="queue"].active')) renderQueuePanel_NPV();
+}
+
+function renderQueuePanel_NPV() {
+  const list = $('npv-queue-list');
+  if (!list) return;
+  const upNext = queueNext.concat(activeSongs.slice(currentIndex + 1));
+  list.innerHTML = upNext.length ? upNext.slice(0, 30).map(s => `
+    <li><img src="${escHtml(s.cover || '')}" alt="" onerror="this.style.opacity=0">
+      <div class="queue-li-meta"><div class="queue-li-title">${escHtml(s.title)}</div><div class="queue-li-artist">${escHtml(s.artist)}</div></div>
+    </li>`).join('') : `<li class="queue-empty-txt" style="border:none">Nothing queued up.</li>`;
+}
+
+function startNpvViz() {
+  const canvas = $('npv-visualizer');
+  if (!canvas || !analyserNode) return;
+  const ctx = canvas.getContext('2d');
+  cancelAnimationFrame(npvVizRafId);
+  const buf = new Uint8Array(analyserNode.frequencyBinCount);
+  function draw() {
+    npvVizRafId = requestAnimationFrame(draw);
+    const w = canvas.width = canvas.clientWidth;
+    const h = canvas.height = canvas.clientHeight;
+    analyserNode.getByteFrequencyData(buf);
+    ctx.clearRect(0, 0, w, h);
+    const accent = getComputedStyle(document.documentElement).getPropertyValue('--dyn').trim() || '#1587c9';
+    const bw = (w / buf.length) * 2.2;
+    let x = 0;
+    for (let i = 0; i < buf.length; i++) {
+      const barH = Math.max(3, (buf[i] / 255) * h);
+      const grad = ctx.createLinearGradient(0, h - barH, 0, h);
+      grad.addColorStop(0, accent);
+      grad.addColorStop(1, 'rgba(255,255,255,0.15)');
+      ctx.fillStyle = grad;
+      ctx.fillRect(x, h - barH, bw - 2, barH);
+      x += bw;
+    }
+  }
+  draw();
+}
+function stopNpvViz() {
+  cancelAnimationFrame(npvVizRafId);
+  npvVizRafId = null;
 }
 
 // ─── YouTube ──────────────────────────────────────────────────────────
