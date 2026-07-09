@@ -92,7 +92,7 @@
             <span>Contact</span>
           </a>
           <div class="sidebar-footer">
-            <span>© 2025 Musiv</span>
+            <span>© 2026 Musiv</span>
             <button class="kbd-hint-btn" id="btn-shortcuts" title="Keyboard shortcuts">?</button>
           </div>
         </div>
@@ -185,6 +185,83 @@
     </div>
 
     <audio id="audio" preload="metadata" crossorigin="anonymous" playsinline></audio>
+  </div>
+
+  <!-- Full-Screen Now Playing View -->
+  <div id="now-playing-view" class="npv" hidden role="dialog" aria-label="Now playing, full screen">
+    <div class="npv-bg" id="npv-bg" aria-hidden="true"></div>
+    <div class="npv-bg-tint" aria-hidden="true"></div>
+    <div class="npv-inner">
+      <div class="npv-head">
+        <button class="npv-collapse" id="npv-collapse" aria-label="Minimize">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"/></svg>
+        </button>
+        <span class="npv-head-label">Now Playing</span>
+        <span class="npv-head-spacer" aria-hidden="true"></span>
+      </div>
+
+      <div class="npv-art-wrap">
+        <img id="npv-cover" class="npv-cover" src="" alt="Album art">
+      </div>
+
+      <div class="npv-meta">
+        <div class="npv-meta-txt">
+          <div class="npv-title" id="npv-title">No song selected</div>
+          <button class="npv-artist" id="npv-artist">Choose a song to play</button>
+        </div>
+        <button class="player-fav-btn npv-fav-btn" id="npv-fav-btn" aria-label="Favorite">
+          <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+        </button>
+      </div>
+
+      <div class="progress-row npv-progress-row">
+        <span class="time-mono" id="npv-current">0:00</span>
+        <div class="progress-track" id="npv-progress-bar" tabindex="0" role="slider" aria-label="Seek">
+          <div class="progress-fill" id="npv-progress-fill"></div>
+          <div class="progress-thumb" id="npv-progress-thumb"></div>
+        </div>
+        <span class="time-mono" id="npv-duration">0:00</span>
+      </div>
+
+      <div class="player-controls npv-controls">
+        <button class="ctrl-btn" id="npv-shuffle" title="Shuffle (S)">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M10.59 9.17L5.41 4 4 5.41l5.17 5.17 1.42-1.41zM14.5 4l2.04 2.04L4 18.59 5.41 20 17.96 7.46 20 9.5V4h-5.5zm.33 9.41l-1.41 1.41 3.13 3.13L14.5 20H20v-5.5l-2.04 2.04-3.13-3.13z"/></svg>
+        </button>
+        <button class="ctrl-btn" id="npv-prev" title="Previous">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/></svg>
+        </button>
+        <button class="ctrl-btn play-btn lg" id="npv-playpause" title="Play/Pause (Space)">
+          <svg id="npv-icon-play" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+          <svg id="npv-icon-pause" viewBox="0 0 24 24" fill="currentColor" style="display:none"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+        </button>
+        <button class="ctrl-btn" id="npv-next" title="Next">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg>
+        </button>
+        <button class="ctrl-btn" id="npv-repeat" title="Repeat">
+          <svg class="repeat-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M7 7h10v3l4-4-4-4v3H5v6h2V7zm10 10H7v-3l-4 4 4 4v-3h12v-6h-2v4z"/></svg>
+        </button>
+      </div>
+
+      <div class="npv-tabs">
+        <button class="npv-tab active" data-tab="visualizer">Visualizer</button>
+        <button class="npv-tab" data-tab="lyrics">Lyrics</button>
+        <button class="npv-tab" data-tab="queue">Up Next</button>
+      </div>
+      <div class="npv-tab-panels">
+        <div class="npv-panel active" data-panel="visualizer">
+          <canvas id="npv-visualizer" class="npv-viz-canvas"></canvas>
+        </div>
+        <div class="npv-panel" data-panel="lyrics">
+          <div class="npv-lyrics-empty">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>
+            <p>Lyrics aren't available for this track yet.</p>
+          </div>
+        </div>
+        <div class="npv-panel" data-panel="queue">
+          <ul class="queue-list" id="npv-queue-list"></ul>
+        </div>
+      </div>
+    </div>
   </div>
 
   <!-- Mobile Bottom Nav -->
